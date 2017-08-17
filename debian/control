@@ -1,4 +1,4 @@
-Source: displaycore
+Source: libdisplaycore-core
 Section: libraries
 Priority: extra
 Maintainer: Matt Jenkins <matt@majenko.co.uk>
