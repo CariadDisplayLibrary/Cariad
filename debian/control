@@ -1,0 +1,19 @@
+Source: displaycore
+Section: libraries
+Priority: extra
+Maintainer: Matt Jenkins <matt@majenko.co.uk>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+
+Package: libdisplaycore-core
+Section: libraries
+Architecture: all
+XBSC-Group: DisplayCore
+XBSC-Subgroup: Core
+Provides: DisplayCore.h
+Description: DisplayCore core files
+ These are the main core files for the DisplayCore system. 
+ All the other libraries rely on these files.
+
+
+
