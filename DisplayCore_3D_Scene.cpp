@@ -42,9 +42,9 @@ int Scene::render(DisplayCore *dev) {
         }
         point3d norm = triangleNormal(conv[i]).norm();
         point3d centroid(
-            (conv[i].a.x + conv[i].b.x, conv[i].c.x)/3.0,
-            (conv[i].a.y + conv[i].b.y, conv[i].c.y)/3.0,
-            (conv[i].a.z + conv[i].b.z, conv[i].c.z)/3.0
+            (conv[i].a.x + conv[i].b.x + conv[i].c.x)/3.0,
+            (conv[i].a.y + conv[i].b.y + conv[i].c.y)/3.0,
+            (conv[i].a.z + conv[i].b.z + conv[i].c.z)/3.0
         );
         point3d lvec = centroid - _light;
         point3d cvec = centroid - _camera;
@@ -198,9 +198,9 @@ void Scene::trace(DisplayCore *dev, float depth, bool smooth) {
         conv[i].flags = _triangles[i].flags;
         point3d norm = triangleNormal(conv[i]).norm();
         point3d centroid(
-            (conv[i].a.x + conv[i].b.x, conv[i].c.x)/3.0,
-            (conv[i].a.y + conv[i].b.y, conv[i].c.y)/3.0,
-            (conv[i].a.z + conv[i].b.z, conv[i].c.z)/3.0
+            (conv[i].a.x + conv[i].b.x + conv[i].c.x)/3.0,
+            (conv[i].a.y + conv[i].b.y + conv[i].c.y)/3.0,
+            (conv[i].a.z + conv[i].b.z + conv[i].c.z)/3.0
         );
         point3d lvec = centroid - _light;
         point3d cvec = centroid - _camera;

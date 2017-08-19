@@ -184,7 +184,7 @@ int main(int argc, char **argv)
                 // [/comment]
                 *pix = u * cols[0] + v * cols[1] + (1 - u - v) * cols[2];
                 // uncomment this line if you want to visualize the row barycentric coordinates
-                //*pix = point3d(u, v, 1 - u - v);
+                // *pix = point3d(u, v, 1 - u - v);
             }
             pix++;
         }

@@ -43,7 +43,7 @@ int DisplayCore::getHeight() {
 }
 
 void DisplayCore::setPixel(int x, int y, int z, color_t c) {
-    point3d p3d = {x, y, z};
+    point3d p3d = {(double)x, (double)y, (double)z};
     point2d p2d = map3Dto2D(p3d);
     setPixel(p2d.x, p2d.y, c);
 }

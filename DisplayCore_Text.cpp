@@ -52,7 +52,7 @@ int DisplayCore::stringWidth(const char *text) {
  *
  *      int height = stringHeight("The quick brown fox jumped over the lazy dog");
  */
-int DisplayCore::stringHeight(const char *text) {
+int DisplayCore::stringHeight(const char __attribute__((unused)) *text) {
     if (font == NULL) {
         return 0;
     }

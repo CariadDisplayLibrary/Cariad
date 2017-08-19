@@ -171,13 +171,13 @@ void Widget::handleTouch() {
     }
 }
 
-void Widget::draw(DisplayCore *dev, int x, int y, color_t t) { draw(dev, x, y); }
-void Widget::drawTransformed(DisplayCore *dev, int x, int y, int transform) { draw(dev, x, y); }
-void Widget::drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t) { draw(dev, x, y); }
+void Widget::draw(DisplayCore *dev, int x, int y, color_t __attribute__((unused)) t) { draw(dev, x, y); }
+void Widget::drawTransformed(DisplayCore *dev, int x, int y, int __attribute__((unused)) transform) { draw(dev, x, y); }
+void Widget::drawTransformed(DisplayCore *dev, int x, int y, int __attribute__((unused)) transform, color_t __attribute__((unused)) t) { draw(dev, x, y); }
 void Widget::draw(DisplayCore &dev, int x, int y) { draw(&dev, x, y); }
 void Widget::draw(DisplayCore &dev, int x, int y, color_t t) { draw(&dev, x, y, t); }
 void Widget::drawTransformed(DisplayCore &dev, int x, int y, int transform) { drawTransformed(&dev, x, y, transform); }
-void Widget::drawTransformed(DisplayCore &dev, int x, int y, int transform, color_t t) { drawTransformed(&dev, x, y, t); }
+void Widget::drawTransformed(DisplayCore &dev, int x, int y, int __attribute__((unused)) transform, color_t t) { drawTransformed(&dev, x, y, t); }
 
 void Widget::render() {
     handleTouch();

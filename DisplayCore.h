@@ -70,9 +70,13 @@ class point3d {
 
             x2 = number * 0.5F;
             y2  = number;
-            i  = * ( long * ) &y2;
+            float *y2fp = &y2;
+            long *y2lp = (long *)y2fp;
+            i  = *y2lp;
             i  = 0x5f3759df - ( i >> 1 );
-            y2  = * ( float * ) &i;
+            long *ilp = &i;
+            float *ifp = (float *)ilp;
+            y2  = *ifp;
             y2  = y2 * ( threehalfs - ( x2 * y2 * y2 ) );
 
             return y2;
@@ -320,7 +324,7 @@ class DisplayCore : public Print
          *  For devices with their own backlight control this function will set the
          *  brightness of the backlight.
          */
-        virtual void setBacklight(int b) {}
+        virtual void setBacklight(int __attribute__((unused)) b) {}
 
         /*! Get Port Data
          *  =============
@@ -526,17 +530,17 @@ class Image : public DisplayCore {
         void draw(DisplayCore &dev, int x, int y) { draw(&dev, x, y); }
         void draw(DisplayCore &dev, int x, int y, color_t t) { draw(&dev, x, y, t); }
         void drawTransformed(DisplayCore &dev, int x, int y, int transform) { drawTransformed(&dev, x, y, transform); }
-        void drawTransformed(DisplayCore &dev, int x, int y, int transform, color_t t) { drawTransformed(&dev, x, y, t); }
+        void drawTransformed(DisplayCore &dev, int x, int y, int __attribute__((unused)) transform, color_t t) { drawTransformed(&dev, x, y, t); }
 
         void setFilter(Filter &f) { _filter = &f; };
         void removeFilter() { _filter = NULL; };
 
-        void setRotation(int r) {}
-        void setPixel(int x, int y, color_t c) {}
+        void setRotation(int __attribute__((unused)) r) {}
+        void setPixel(int __attribute__((unused)) x, int __attribute__((unused)) y, color_t __attribute__((unused)) c) {}
         void initializeDevice() {}
         void displayOn() {}
         void displayOff() {}
-        void invertDisplay(boolean i) {}
+        void invertDisplay(boolean __attribute__((unused)) i) {}
 
         int _width;
         int _height;
