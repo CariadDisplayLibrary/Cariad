@@ -4,7 +4,7 @@
 Form::Form(int num...) {
     va_list args;
     _size = num;
-    _list = (Widget **)malloc(sizeof(Widget) * _size);
+    _list = (Widget **)malloc(sizeof(Widget *) * _size);
     va_start(args, num);
     for (int i = 0; i < _size; i++) {
         _list[i] = va_arg(args, Widget *);

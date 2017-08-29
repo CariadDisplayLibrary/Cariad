@@ -39,7 +39,6 @@ void Widget::handleTouch() {
             pressed = false;
         }
     }
-        
 
     if (pressed) {
         _tx = _ts->x();
@@ -62,6 +61,7 @@ void Widget::handleTouch() {
         _rp = 0;
         _redraw = true;
       //  draw(_dev, _x, _y);
+
 
         if (_press != NULL) {
             Event e = {this, _sx, _sy, _sx, _sy, EVENT_PRESS};
@@ -100,9 +100,10 @@ void Widget::handleTouch() {
     if ((pressed && !inBounds) && _active) {
 //        _active = false;
 //        _redraw = true;
-        Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_RELEASE};
-        _release(&e);
-        //draw(_dev, _x, _y);
+        if (_release != NULL) {
+            Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_RELEASE};
+            _release(&e);
+        }
     }
     // Drag
     if ((pressed && inBounds) && _active) {

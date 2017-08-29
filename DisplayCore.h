@@ -671,6 +671,8 @@ class Form {
         void onDrag(void (*func)(Event *));
         void onTap(void (*func)(Event *));
         void onRepeat(void (*func)(Event *));
+        Widget **getList() { return _list; }
+        int getSize() { return _size; }
 };
 
 #define TRIANGLE_HIDDEN 1
