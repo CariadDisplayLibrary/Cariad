@@ -604,11 +604,18 @@ class Widget : public Image {
         void (*_drag)(Event *);
         void (*_tap)(Event *);
         void (*_repeat)(Event *);
+        Widget *_eventObject;
+
+        virtual void handlePress(Event *e);
+        virtual void handleRelease(Event *e);
+        virtual void handleDrag(Event *e);
+        virtual void handleTap(Event *e);
+        virtual void handleRepeat(Event *e);
 
     public:
         Widget(Touch &t, DisplayCore &d, int x, int y) : Image(),
             _ts(&t), _dev(&d), _x(x), _y(y), _redraw(true), _touch(false), _enabled(true),
-            _press(NULL), _release(NULL), _drag(NULL), _tap(NULL), _repeat(NULL)
+            _press(NULL), _release(NULL), _drag(NULL), _tap(NULL), _repeat(NULL), _eventObject(NULL)
             {}
         virtual void setValue(int v);
         virtual int getValue();
@@ -627,6 +634,8 @@ class Widget : public Image {
         void onDrag(void (*func)(Event *)) { _drag = func; }
         void onTap(void (*func)(Event *)) { _tap = func; }
         void onRepeat(void (*func)(Event *)) { _repeat = func; }
+
+        void setEventObject(Widget *o) { _eventObject = o; }
 
         void handleTouch();
 

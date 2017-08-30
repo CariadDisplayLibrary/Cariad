@@ -10,6 +10,51 @@ int Widget::getValue() {
     return _value;
 }
 
+void Widget::handlePress(Event *e) {
+    if (_eventObject != NULL) {
+        _eventObject->handlePress(e);
+    }
+    if (_press != NULL) {
+        _press(e);
+    }
+}
+
+void Widget::handleRelease(Event *e) {
+    if (_eventObject != NULL) {
+        _eventObject->handleRelease(e);
+    }
+    if (_release != NULL) {
+        _release(e);
+    }
+}
+
+void Widget::handleTap(Event *e) {
+    if (_eventObject != NULL) {
+        _eventObject->handleTap(e);
+    }
+    if (_tap != NULL) {
+        _tap(e);
+    }
+}
+
+void Widget::handleDrag(Event *e) {
+    if (_eventObject != NULL) {
+        _eventObject->handleDrag(e);
+    }
+    if (_drag != NULL) {
+        _drag(e);
+    }
+}
+
+void Widget::handleRepeat(Event *e) {
+    if (_eventObject != NULL) {
+        _eventObject->handleRepeat(e);
+    }
+    if (_repeat != NULL) {
+        _repeat(e);
+    }
+}
+
 void Widget::handleTouch() {
     if (!_touch) {
         return;
@@ -63,12 +108,10 @@ void Widget::handleTouch() {
       //  draw(_dev, _x, _y);
 
 
-        if (_press != NULL) {
-            Event e = {this, _sx, _sy, _sx, _sy, EVENT_PRESS};
-            _rx = _sx;
-            _ry = _sy;
-            _press(&e);
-        }
+        Event e = {this, _sx, _sy, _sx, _sy, EVENT_PRESS};
+        _rx = _sx;
+        _ry = _sy;
+        handlePress(&e);
     }
 
     // Release
@@ -78,78 +121,63 @@ void Widget::handleTouch() {
         _ex = _tx - _x;
         _ey = _ty - _y;
         _redraw = true;
-     //   draw(_dev, _x, _y);
 
-        if (_release != NULL) {
-            _rx = _ex;
-            _ry = _ey;
-            Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_RELEASE};
-            _release(&e);
-        }
+        _rx = _ex;
+        _ry = _ey;
+        Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_RELEASE};
+        handleRelease(&e);
 
         if (((_et - _st) > 10) && ((_et - _st) < 2000)) {
-            if (_tap != NULL) {
-                _rx = _ex;
-                _ry = _ey;
-                Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_TAP};
-                _tap(&e);
-            }
+            _rx = _ex;
+            _ry = _ey;
+            Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_TAP};
+            handleTap(&e);
         }
     }
 
     if ((pressed && !inBounds) && _active) {
-//        _active = false;
-//        _redraw = true;
-        if (_release != NULL) {
-            Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_RELEASE};
-            _release(&e);
-        }
+        _active = false;
+        _redraw = true;
+        Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_RELEASE};
+        handleRelease(&e);
     }
     // Drag
     if ((pressed && inBounds) && _active) {
         _ex = _tx - _x;
         _ey = _ty - _y;
         if (_sx != _ex || _sy != _ey) {
-            if (_drag != NULL) {
-                _rx = _ex;
-                _ry = _ey;
-                Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_DRAG};
-                _drag(&e);
-            }
+            _rx = _ex;
+            _ry = _ey;
+            Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_DRAG};
+            handleDrag(&e);
         }
         // Key repeat
 
         if (_rp == 0) {
             _rt = millis();
             _rp = 1;
-            if (_repeat != NULL) {
-                _rx = _ex;
-                _ry = _ey;
-                Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
-                _repeat(&e);
-            }
+            _rx = _ex;
+            _ry = _ey;
+            Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
+            handleRepeat(&e);
         } else if (_rp == 1) {
             if (millis() - _rt >= 1000) {
                 _rt = millis();
                 _rp = 2;
                 _rc = 0;
-                if (_repeat != NULL) {
-                    _rx = _ex;
-                    _ry = _ey;
-                    Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
-                    _repeat(&e);
-                }
+                _rx = _ex;
+                _ry = _ey;
+                Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
+                handleRepeat(&e);
             }
 
         } else if (_rp == 2) {
             if (millis() - _rt >= 200) {
                 _rt = millis();
-                if (_repeat != NULL) {
-                    _rx = _ex;
-                    _ry = _ey;
-                    Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
-                    _repeat(&e);
-                }
+                _rx = _ex;
+                _ry = _ey;
+                Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
+                handleRepeat(&e);
                 _rc++;
                 if (_rc == 10) {
                     _rp = 3;
@@ -158,12 +186,10 @@ void Widget::handleTouch() {
         } else if (_rp == 3) {
             if (millis() - _rt >= 50) {
                 _rt = millis();
-                if (_repeat != NULL) {
-                    _rx = _ex;
-                    _ry = _ey;
-                    Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
-                    _repeat(&e);
-                }
+                _rx = _ex;
+                _ry = _ey;
+                Event e = {this, _ex, _ey, _ex - _sx, _ex - _sy, EVENT_REPEAT};
+                handleRepeat(&e);
             }
         }
 
