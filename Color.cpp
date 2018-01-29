@@ -1,13 +1,8 @@
 #include <DisplayCore.h>
 #include <stdarg.h>
 
-/*! \name Colour handling
- *  These functions are all related to manipulating colours in one way or another.
- */
-
 /**@{*/
-/*! Convert RGB to 565 colour
- *  =========================
+/*!
  *  This function takes an RGB triplet (r, g, b) and converts it into
  *  a 16-bit 565 colour.
  *
@@ -19,8 +14,7 @@ color_t DisplayCore::color565(uint8_t r, uint8_t g, uint8_t b) {
     return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
 
-/*! Get the 3D colour space of a colour
- *  ===================================
+/*!
  *  This function converts a 565 colour into a 3D coordinate
  *  in RGB colour space (X, Y, Z).
  *
@@ -71,8 +65,7 @@ point3d DisplayCore::rgb2xyz(color_t rgb) {
     return xyz;
 }
 
-/*! Convert a 3D colour space point to LAB
- *  ======================================
+/*!
  *  Calculate the LAB colour space value of a 3D point in
  *  RGB colour space.
  *
@@ -111,8 +104,7 @@ point3d DisplayCore::xyz2lab(point3d xyz) {
     return lab;
 }
 
-/*! Calculate the DeltaE between two LAB colours
- *  ============================================
+/*!
  *  This function takes two LAB colours and calculates
  *  the difference (delta) between them.
  *
@@ -128,8 +120,7 @@ double DisplayCore::deltaE(point3d labA, point3d labB) {
     );
 }
 
-/*! Calculate the orthogonal difference between colours
- *  ===================================================
+/*!
  *  Two RGB 565 colours are compared and the orthogonal distance
  *  between them (as HSV colours) is calculated.
  *
@@ -266,13 +257,13 @@ color_t DisplayCore::hsv2rgb(uint32_t hsv) {
     return rgb(r, g, b);
 }
 
-/*! Mix two colours together
- *  ========================
+/*!
  *  Returns a new colour that is the mixing of the two provided colours.
+ *  The ratio (pct) to mix is between 0 and 255.
  *
  *  Example:
  *
- *      unsigned int yellow = tft.mix(Color::Red, Color::Green);
+ *      unsigned int yellow = tft.mix(Color::Red, Color::Green, 128);
  */
 color_t DisplayCore::mix(color_t a, color_t b, int pct) {
     Color565 col_a;

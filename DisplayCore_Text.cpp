@@ -1,12 +1,7 @@
 #include <DisplayCore.h>
 #include <stdarg.h>
 
-/*! \name Text handing functions
- *  These are functions used for dealing with text and printing of strings to the screen.
- */
-
-/*! Calculate the width of a string
- *  ===============================
+/*!
  *  The total width of a string of characters is calculated by examining the width of each
  *  character using the current font in turn and accumulating the total width.
  *
@@ -15,6 +10,7 @@
  *      int width = tft.stringWidth("The quick brown fox jumped over the lazy dog");
  */
 int DisplayCore::stringWidth(const char *text) {
+    if (advancedFont != NULL) return advancedFont->getStringWidth(text);
     int w = 0;
     if (font == NULL) {
         return 1;
@@ -42,9 +38,45 @@ int DisplayCore::stringWidth(const char *text) {
     }
     return w;
 }
+
+// The Font class implementation of the same thing:
+int Font::getStringWidth(const char *text) {
+    int w = 0;
+    FontHeader *header = (FontHeader *)_fontData;
+
+    for (const char *t = text; *t; t++) {
+        uint8_t c = *t;
+        if (c < header->startGlyph) {
+            if (c >= 'A' && c <= 'Z') {
+                c += ('a' - 'A');
+            }
+        }
+        if (c > header->endGlyph) {
+            if (c >= 'a' && c <= 'z') {
+                c -= ('a' - 'A');
+            }
+        }
+        if (c >= header->startGlyph && c <= header->endGlyph) {
+            uint8_t co = c - header->startGlyph;
+            uint32_t charstart = (co * ((header->linesPerCharacter * header->bytesPerLine) + 1)) + sizeof(FontHeader); // Start of character data
+            uint8_t charwidth = _fontData[charstart++];
+            w += charwidth;
+        }
+    }
+    return w;
+}
+
+uint8_t Font::getCharacterWidth(uint8_t c) {
+    FontHeader *header = (FontHeader *)_fontData;
+    if (c < header->startGlyph || c > header->endGlyph) return 0;
+    uint8_t co = c - header->startGlyph;
+    uint32_t charstart = (co * ((header->linesPerCharacter * header->bytesPerLine) + 1)) + sizeof(FontHeader); // Start of character data
+    uint8_t charwidth = _fontData[charstart];
+    return charwidth;
+}
+
         
-/*! Calculate the height of a string
- *  ================================
+/*!
  *  As fonts are all fixed height, this just returns the height of the
  *  currently selected font in pixels.
  *
@@ -53,12 +85,32 @@ int DisplayCore::stringWidth(const char *text) {
  *      int height = stringHeight("The quick brown fox jumped over the lazy dog");
  */
 int DisplayCore::stringHeight(const char __attribute__((unused)) *text) {
+    if (advancedFont != NULL) return advancedFont->getStringHeight(text);
     if (font == NULL) {
         return 0;
     }
     FontHeader *header = (FontHeader *)font;
 
     return header->linesPerCharacter;
+}
+
+// The Font class implementation of the same thing:
+int Font::getStringHeight(const char __attribute__((unused)) *text) {
+    FontHeader *header = (FontHeader *)_fontData;
+
+    return header->linesPerCharacter;
+}
+        
+uint8_t Font::getStartGlyph() {
+    FontHeader *header = (FontHeader *)_fontData;
+
+    return header->startGlyph;
+}
+        
+uint8_t Font::getEndGlyph() {
+    FontHeader *header = (FontHeader *)_fontData;
+
+    return header->endGlyph;
 }
         
 
@@ -81,8 +133,7 @@ void DisplayCore::write(const uint8_t *buffer, size_t size) {
 }
 #endif
 
-/*! Write a character to the screen
- *  ===============================
+/*!
  *  This writes a single character to the screen at the current cursor position.  It is used by (among other
  *  things) the print routines for rendering strings.
  *
@@ -92,51 +143,86 @@ void DisplayCore::write(const uint8_t *buffer, size_t size) {
  */
 #if ARDUINO >= 100
 size_t DisplayCore::write(uint8_t c) {
-    if (font == NULL) {
+    if (font == NULL && advancedFont==NULL) {
         return 0;
     }
 #else
 void DisplayCore::write(uint8_t c) {
-    if (font == NULL) {
+    if (font == NULL && advancedFont==NULL) {
         return;
     }
 #endif
-    FontHeader *header = (FontHeader *)font;
 
-    if (c == '\n') {
-        cursor_y += header->linesPerCharacter;
-        cursor_x = 0;
-    } else if (c == '\r') {
-        // skip em
+    if (advancedFont == NULL) {
+        FontHeader *header = (FontHeader *)font;
+
+        if (c == '\n') {
+            cursor_y += header->linesPerCharacter;
+            cursor_x = 0;
+        } else if (c == '\r') {
+            // skip em
+        } else {
+            if (c < header->startGlyph) {
+                if (c >= 'A' && c <= 'Z') {
+                    c += ('a' - 'A');
+                }
+            }
+            if (c > header->endGlyph) {
+                if (c >= 'a' && c <= 'z') {
+                    c -= ('a' - 'A');
+                }
+            }
+            if (c >= header->startGlyph && c <= header->endGlyph) {
+                uint8_t co = c - header->startGlyph;
+                uint32_t charstart = (co * ((header->linesPerCharacter * header->bytesPerLine) + 1)) + sizeof(FontHeader); // Start of character data
+                uint8_t charwidth = font[charstart++];
+                if (wrap && (cursor_x > (getWidth() - charwidth))) {
+                    cursor_y += header->linesPerCharacter;
+                    cursor_x = 0;
+                }
+                cursor_x += drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor);
+            }
+        }
+    #if ARDUINO >= 100
+        return 1;
+    #endif
     } else {
-        if (c < header->startGlyph) {
-            if (c >= 'A' && c <= 'Z') {
-                c += ('a' - 'A');
+        int linesPerCharacter = advancedFont->getStringHeight("M");
+        uint8_t startGlyph = advancedFont->getStartGlyph();
+        uint8_t endGlyph = advancedFont->getEndGlyph();
+
+        if (c == '\n') {
+            cursor_y += linesPerCharacter;
+            cursor_x = 0;
+        } else if (c == '\r') {
+            // skip em
+        } else {
+            if (c < startGlyph) {
+                if (c >= 'A' && c <= 'Z') {
+                    c += ('a' - 'A');
+                }
+            }
+            if (c > endGlyph) {
+                if (c >= 'a' && c <= 'z') {
+                    c -= ('a' - 'A');
+                }
+            }
+            if (c >= startGlyph && c <= endGlyph) {
+                uint8_t charWidth = advancedFont->getCharacterWidth(c);
+                if (wrap && (cursor_x > (getWidth() - charWidth))) {
+                    cursor_y += linesPerCharacter;
+                    cursor_x = 0;
+                }
+                cursor_x += advancedFont->drawChar(this, cursor_x, cursor_y, c, textcolor, textbgcolor);
             }
         }
-        if (c > header->endGlyph) {
-            if (c >= 'a' && c <= 'z') {
-                c -= ('a' - 'A');
-            }
-        }
-        if (c >= header->startGlyph && c <= header->endGlyph) {
-            uint8_t co = c - header->startGlyph;
-            uint32_t charstart = (co * ((header->linesPerCharacter * header->bytesPerLine) + 1)) + sizeof(FontHeader); // Start of character data
-            uint8_t charwidth = font[charstart++];
-            if (wrap && (cursor_x > (getWidth() - charwidth))) {
-                cursor_y += header->linesPerCharacter;
-                cursor_x = 0;
-            }
-            cursor_x += drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor);
-        }
+    #if ARDUINO >= 100
+        return 1;
+    #endif
     }
-#if ARDUINO >= 100
-    return 1;
-#endif
 }
 
-/*! Draw a character
- *  ================
+/*!
  *  This is the heart of the text handling.  It takes the current font, locates the right character (c)
  *  data, and renders it to the screen at the specified (x,y) location.  It is drawn in colour (color), and
  *  the background is filled in (bg).  If (bg) and (color) are equal then the background pixels are
@@ -238,8 +324,96 @@ int DisplayCore::drawChar(int x, int y, unsigned char c, color_t color, color_t 
     return charwidth;
 }
 
-/*! Set the text cursor
- *  ===================
+// The Font class implementation of the same thing
+int Font::drawChar(DisplayCore *dev, int x, int y, unsigned char c, color_t color, color_t bg) {
+
+    FontHeader *header = (FontHeader *)_fontData;
+
+    if (c < header->startGlyph || c > header->endGlyph) {
+        return 0;
+    }
+
+    dev->startBuffer();
+
+    c = c - header->startGlyph;
+
+    // Start of this character's data is the character number multiplied by the
+    // number of lines in a character (plus one for the character width) multiplied
+    // by the number of bytes in a line, and then offset by 4 for the header.
+    uint32_t charstart = (c * ((header->linesPerCharacter * header->bytesPerLine) + 1)) + sizeof(FontHeader); // Start of character data
+    uint8_t charwidth = _fontData[charstart++]; // The first byte of a block is the width of the character
+
+    uint8_t nCols = 1 << header->bitsPerPixel;
+    uint32_t bitmask = nCols - 1;
+    color_t cmap[nCols];
+
+    if (bg != color) {
+        for (uint8_t i = 0; i < nCols; i++) {
+            cmap[i] = dev->mix(bg, color, 255 * i / nCols); //bitmask);
+        }
+
+        dev->openWindow(x, y, charwidth, header->linesPerCharacter);
+
+        for (int8_t lineNumber = 0; lineNumber < header->linesPerCharacter; lineNumber++ ) {
+            uint8_t lineData = 0;
+
+            int8_t bitsLeft = -1;
+            uint8_t byteNumber = 0;
+
+
+            for (int8_t pixelNumber = 0; pixelNumber < charwidth; pixelNumber++) {
+                if (bitsLeft <= 0) {
+                    bitsLeft = 8;
+                    lineData = _fontData[charstart + (lineNumber * header->bytesPerLine) + (header->bytesPerLine - byteNumber - 1)];
+                    byteNumber++;
+                }
+                uint32_t pixelValue = lineData & bitmask;
+
+                dev->windowData(cmap[pixelValue]);
+    
+                lineData >>= header->bitsPerPixel;
+                bitsLeft -= header->bitsPerPixel;
+            }
+        }
+        dev->closeWindow();
+    } else {
+
+        for (int8_t lineNumber = 0; lineNumber < header->linesPerCharacter; lineNumber++ ) {
+            uint8_t lineData = 0;
+
+            int8_t bitsLeft = -1;
+            uint8_t byteNumber = 0;
+
+
+            for (int8_t pixelNumber = 0; pixelNumber < charwidth; pixelNumber++) {
+                if (bitsLeft <= 0) {
+                    bitsLeft = 8;
+                    lineData = _fontData[charstart + (lineNumber * header->bytesPerLine) + (header->bytesPerLine - byteNumber - 1)];
+                    byteNumber++;
+                }
+                uint32_t pixelValue = lineData & bitmask;
+
+                // If we have some kind of foreground colour...
+                if (pixelValue > 0) {
+                    // If it is at full opacity...
+                    if (pixelValue == bitmask) {
+                        dev->setPixel(x + pixelNumber, y + lineNumber, color);
+                    // Otherwise mix or fade the colour...
+                    } else {
+                        color_t bgc = dev->colorAt(x+pixelNumber, y+lineNumber);
+                        dev->setPixel(x + pixelNumber, y + lineNumber, dev->mix(bgc, color, 255 * pixelValue / bitmask));
+                    }
+                }
+                lineData >>= header->bitsPerPixel;
+                bitsLeft -= header->bitsPerPixel;
+            }
+        }
+    }
+    dev->endBuffer();
+    return charwidth;
+}
+
+/*!
  *  All future printing will happen from the pixel (x,y).
  *
  *  Example:
@@ -251,8 +425,7 @@ void DisplayCore::setCursor(int x, int y) {
     cursor_y = y;
 }
 
-/*! Set the text X cursor
- *  =====================
+/*!
  *  All future printing will happen from the X pixel (x).
  *
  *  Example:
@@ -263,8 +436,7 @@ void DisplayCore::setCursorX(int x) {
     cursor_x = x;
 }
 
-/*! Set the text Y cursor
- *  =====================
+/*!
  *  All future printing will happen from the Y pixel (y).
  *
  *  Example:
@@ -275,8 +447,7 @@ void DisplayCore::setCursorY(int y) {
     cursor_y = y;
 }
 
-/*! Get X Cursor 
- *  ============
+/*!
  *  Returns the current X position of the text cursor.
  *
  *  Example:
@@ -287,8 +458,7 @@ int DisplayCore::getCursorX() {
     return cursor_x;
 }
 
-/*! Get Y Cursor 
- *  ============
+/*!
  *  Returns the current Y position of the text cursor.
  *
  *  Example:
@@ -299,8 +469,7 @@ int DisplayCore::getCursorY() {
     return cursor_y;
 }
 
-/*! Get Text Cursor 
- *  ============
+/*!
  *  Returns the ether the current X or Y position of the text cursor.  A parameter of `true`
  *  requests the X coordinate, otherwise the Y coordinate is returned.
  *
@@ -315,8 +484,7 @@ int DisplayCore::getCursor(boolean x) {
     return cursor_y;
 }
 
-/*! Set the text foreground colour
- *  ==============================
+/*!
  *  Sets the foreground colour of all future printing to (c).
  *
  *  Example:
@@ -327,8 +495,7 @@ void DisplayCore::setTextColor(color_t c) {
     textcolor = c;
 }
 
-/*! Sets both foreground and background colour
- *  ==========================================
+/*!
  *  Sets both the foreground and the background colours of all
  *  future printing.  If the foreground and background colours match
  *  the background will be transparent.
@@ -343,8 +510,7 @@ void DisplayCore::setTextColor(color_t fg, color_t bg) {
     bgColor = bg;
 }
 
-/*! Invert the text colours
- *  =======================
+/*!
  *  The foreground becomes the background, and the background becomes the foreground.
  *
  *  Example:
@@ -355,8 +521,7 @@ void DisplayCore::invertTextColor( ){
 	setTextColor( textbgcolor, textcolor );
 }
 
-/*! Enable or disable text wrapping
- *  ===============================
+/*!
  *  With text wrapping enabled, when text reaches the right-hand edge of the
  *  screen it wraps around back to the left on the next line down.  This function
  *  alows you to enable (true) or disable (false) this functionality.  By default
@@ -370,8 +535,7 @@ void DisplayCore::setTextWrap(boolean w) {
   wrap = w;
 }
 
-/*! Set the current font
- *  ====================
+/*!
  *  The current font is set to the font provided.  A font is a byte array of data with
  *  metric information embedded in it.
  *
@@ -381,10 +545,15 @@ void DisplayCore::setTextWrap(boolean w) {
  */
 void DisplayCore::setFont(const uint8_t *f) {
     font = f;
+    advancedFont = NULL;
 }
 
-/*! Get the current foreground colour
- *  =================================
+void DisplayCore::setFont(Font &f) {
+    font = NULL;
+    advancedFont = &f;
+}
+
+/*!
  *  Returns the currently selected foreground colour.
  *
  *  Example:

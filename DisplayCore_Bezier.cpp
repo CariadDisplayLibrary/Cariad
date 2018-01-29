@@ -1,6 +1,14 @@
 #include <DisplayCore.h>
 #include <stdarg.h>
 
+/*!
+ *  Draws a Bezier Curve between x0,y0 and x3,y3 with permutation points
+ *  at x1,y1 and x2,y2.
+ *
+ *  Example:
+ * 
+ *      tft.drawBezier(0, 100, 100, 50, 200, 150, 300, 100, Color::Red);
+ */
 void DisplayCore::drawBezier(
     int x0, int y0,
     int x1, int y1,
@@ -36,6 +44,14 @@ void DisplayCore::drawBezier(
     endBuffer();
 }
 
+/*!
+ *  Draws a filled Bezier Curve between x0,y0 and x3,y3 with permutation points
+ *  at x1,y1 and x2,y2.
+ *
+ *  Example:
+ * 
+ *      tft.fillBezier(0, 100, 100, 50, 200, 150, 300, 100, Color::Red);
+ */
 void DisplayCore::fillBezier(
     int x0, int y0,
     int x1, int y1,

@@ -1,8 +1,7 @@
 #include <DisplayCore.h>
 #include <stdarg.h>
 
-/*! Get the colour at a location
- *  ============================
+/*!
  *  Returns the colour at (x,y) as seen by the screen.
  *
  *  Example:

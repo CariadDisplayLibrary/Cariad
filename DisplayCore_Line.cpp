@@ -3,8 +3,7 @@
 
 #include "swap.h"
 
-/*! Draw a straight line
- *  ====================
+/*!
  *  This function uses Bresenham's algorithm to draw a straight line.  The line
  *  starts at coordinates (x0, y0) and extends to coordinates (x1, y1).  The line
  *  is drawn in color (color).
@@ -55,8 +54,7 @@ void DisplayCore::drawLine(int x0, int y0, int x1, int y1, color_t color) {
     endBuffer();
 }
 
-/*! Draw a thick straight line
- *  ====================
+/*!
  *  This function uses Bresenham's algorithm to draw a straight line.  The line
  *  starts at coordinates (x0, y0) and extends to coordinates (x1, y1).  The line
  *  is drawn in color (color).

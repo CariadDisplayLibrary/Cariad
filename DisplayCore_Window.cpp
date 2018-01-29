@@ -1,8 +1,7 @@
 #include <DisplayCore.h>
 #include <stdarg.h>
 
-/*! Open a window
- *  =============
+/*!
  *  Opens the rectangle defined by (x0,y0) to (x1,y1) as a raw data window.
  *
  *  Example:
@@ -19,8 +18,7 @@ void DisplayCore::openWindow(int x0, int y0, int x1, int y1) {
     startBuffer();
 }
 
-/*! Send pixel data to the window 
- *  =============================
+/*!
  *  Sends the raw pixel data for one pixel to the currently opened window.
  *
  *  Example:
@@ -39,8 +37,7 @@ void DisplayCore::windowData(color_t d) {
     }
 }
 
-/*! Send a block of pixel data to the window 
- *  ========================================
+/*!
  *  The array of pixel data (*d) ans size (l) is dumped verbatim
  *  to the currently opened window.
  *
@@ -54,8 +51,7 @@ void DisplayCore::windowData(const color_t *d, int l) {
     }
 }
 
-/*! Close the window
- *  ================
+/*!
  *  Close the currently opened window and return to normal
  *  drawing operations.
  *

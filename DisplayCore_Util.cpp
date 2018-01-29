@@ -26,8 +26,7 @@ color_t rgb(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 
-/*! Display a fatal error
- *  =====================
+/*!
  *  Used internally by various functions and libraries to display
  *  a fatal error message.  This is an error that cannot be recovered
  *  from, so the program stops here.

@@ -114,32 +114,82 @@ typedef struct {
 extern color_t rgb(uint32_t c);
 extern color_t rgb(uint8_t r, uint8_t g, uint8_t b);
 
+class DisplayCore;
+
+// The new font abstration base class. Implements the normal font system as default.
+class Font {
+    private:
+        const uint8_t *_fontData;
+
+    public:
+        Font(const uint8_t *fd) : _fontData(fd) {}
+        virtual int getStringWidth(const char *str);
+        virtual int getStringHeight(const char *str);
+        virtual uint8_t getCharacterWidth(uint8_t glyph);
+        virtual uint8_t getStartGlyph();
+        virtual uint8_t getEndGlyph();
+        virtual int drawChar(DisplayCore *dev, int x, int y, uint8_t c, color_t fg, color_t bg);
+};
+
+
 class DisplayCore : public Print
 {
     public:
         DisplayCore();
+
+        /*! \name Primitives
+         * @{
+         */
         virtual void drawCircle(int x0, int y0, int r, color_t color);
         virtual void fillCircle(int x0, int y0, int r, color_t color);
         virtual void drawLine(int x0, int y0, int x1, int y1, color_t color);
         virtual void drawLine(int x0, int y0, int x1, int y1, int width, color_t color);
-
-        void drawLine3D(int x1, int y1, int z1, const int x2, const int y2, const int z2, color_t color);
-        point2d map3Dto2D(point3d &p);
-
-
         void drawPolygon(point2d *nodes, int numpoints, color_t color);
-        void drawPolygon3D(point3d *nodes, int numpoints, color_t color);
         void fillPolygon(point2d *nodes, int numpoints, color_t color);
-        void fillPolygon3D(point3d *nodes, int numpoints, color_t color);
-
         virtual void drawRectangle(int x, int y, int w, int h, color_t color);
         virtual void drawRoundRect(int x, int y, int w, int h, int r, color_t color);
         virtual void fillRoundRect(int x, int y, int w, int h, int r, color_t color);
         virtual void drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);
         virtual void fillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);
+        virtual void drawBezier(int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, int resolution, color_t color);
+        virtual void fillBezier(int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, int resolution, color_t color);
+        virtual void fillRectangle(int x, int y, int w, int h, color_t color);
+        virtual void fillScreen(color_t color);
+        virtual void setPixel(int x, int y, color_t color) = 0;
+        virtual void drawHorizontalLine(int x, int y, int w, color_t color);
+        virtual void drawVerticalLine(int x, int y, int h, color_t color);
+
+        /* @} */
+
+        /*! \name 3D 
+         * @{
+         */
+
+        virtual void setPixel(int x, int y, int z, color_t color);
+        void drawLine3D(int x1, int y1, int z1, const int x2, const int y2, const int z2, color_t color);
+        point2d map3Dto2D(point3d &p);
+        void drawPolygon3D(point3d *nodes, int numpoints, color_t color);
+        void fillPolygon3D(point3d *nodes, int numpoints, color_t color);
+        void setCamera(point3d pos, point3d angle) { _camera = pos; _camang = angle; }
+        void setFOV(int fov) { _fov = fov; }
+        int getFOV() { return _fov; }
+
+        /*! @} */
+
+
+        /*! \name Image drawing
+         *  These routines are used for drawing basic bitmap images to the screen.
+         *  @{
+         */
         virtual void drawBitmap(int x, int y, const uint8_t *bitmap, int w, int h, color_t color);
         virtual void drawRGB(int x, int y, const color_t *bitmap, int w, int h);
         virtual void drawRGBA(int x, int y, const color_t *bitmap, int w, int h, color_t trans);
+        /*! @} */
+
+        /*! \name Text Handling
+         * @{
+         */
+
         virtual void setCursor(int x, int y);
         virtual void setCursorX(int x);
         virtual void setCursorY(int y);
@@ -151,98 +201,44 @@ class DisplayCore : public Print
         virtual color_t getTextColor();
         virtual void invertTextColor();
         virtual void setTextWrap(boolean w);
-        virtual color_t color565(uint8_t r, uint8_t g, uint8_t b);
         virtual void setFont(const uint8_t *f);
-        virtual void translateCoordinates(int *x, int *y);
-        virtual void drawBezier(
-            int x0, int y0,
-            int x1, int y1,
-            int x2, int y2,
-            int x3, int y3,
-            int resolution,
-            color_t color
-        );
+        virtual void setFont(Font &f);
+        virtual int stringWidth(const char *text);
+        virtual int stringHeight(const char *text);
+        int drawChar(int x, int y, unsigned char c, color_t color, color_t bg);
+#if ARDUINO >= 100
+        virtual size_t write(uint8_t c);
+        virtual size_t write(const uint8_t *buffer, size_t size);
+#else
+        virtual void write(uint8_t c);
+        virtual void write(const uint8_t *buffer, size_t size);
+#endif
 
-        virtual void fillBezier(
-            int x0, int y0,
-            int x1, int y1,
-            int x2, int y2,
-            int x3, int y3,
-            int resolution,
-            color_t color
-        );
 
-        virtual void fillScreen(color_t color);
-        virtual void fillRectangle(int x, int y, int w, int h, color_t color);
+        /*! @} */
 
-        void setClipping(int x0, int y0, int x1, int y1);
-        void clearClipping();
-
-        /*! \name Pure virtual functions
-         *  These are all functions that must be implemented in a TFT driver in order for it to function.
+        /*! \name Colour Handling 
+         *  @{
          */
-         /**@{*/
-    
-        /*! Set screen rotation
-         *  ===================
-         *  This rotates the screen. Value is between 0 and 3, for 0°, 90°, 180° or 270°.
-         *
-         *  Example:
-         *
-         *      tft.setRotation(1);
+        virtual color_t color565(uint8_t r, uint8_t g, uint8_t b);
+        virtual color_t colorAt(int x, int y);
+        virtual void getRectangle(int x, int y, int w, int h, color_t *buf);
+        point3d rgb2xyz(color_t c);
+        point3d xyz2lab(point3d c);
+        double deltaE(point3d labA, point3d labB);
+        uint32_t deltaOrth(color_t c1, color_t c2);
+        static uint32_t rgb2hsv(color_t rgb);
+        static color_t hsv2rgb(uint32_t hsv);
+        color_t mix(color_t a, color_t b, int pct);
+        uint32_t color2rgb(color_t c);
+
+        /*! @} */
+
+        /*! \name Screen Control
+         *  @{
          */
         virtual void setRotation(int rotation) = 0;
-        /*! Draw a pixel
-         *  ============
-         *  A pixel, coloured (color) is drawn at (x,y).
-         *  
-         *  Example:
-         *  
-         *      tft.setPixel(100, 100, Color::Green);
-         */
-        virtual void setPixel(int x, int y, color_t color) = 0;
-        /*! Draw a pixel in 3D space
-         *  ========================
-         *  Maps a point in 3D space into a 2D viewport and sets that pixel
-         *  to the specified colour.
-         *
-         *  Example: 
-         *      
-         *      tft.setPixel(100, 100, 100, Color::Green);
-         */
-        virtual void setPixel(int x, int y, int z, color_t color);
-        /*! Set viewport location
-         *  =====================
-         *  Sets the distance of the 3D viewport from the viewer
-         *
-         *  Example:
-         *
-         *      tft.setViewport(240);
-         */
-        void setCamera(point3d pos, point3d angle) { _camera = pos; _camang = angle; }
-        void setFOV(int fov) { _fov = fov; }
-        int getFOV() { return _fov; }
-    
-        /*! Draw a horizontal line
-         *  ======================
-         *  A horizontal line of width (w) is drawn from point (x,y) in colour (color);
-         * 
-         *  Example:
-         *
-         *      tft.drawHorizontalLine(10, 10, 50, Color::Blue);
-         */
-        virtual void drawHorizontalLine(int x, int y, int w, color_t color);
-        /*! Draw a vertical line
-         *  ====================
-         *  A vertical line of height (h) is drawn from point (x,y) in colour (color);
-         * 
-         *  Example:
-         *
-         *      tft.drawVerticalLine(10, 10, 50, Color::Blue);
-         */
-        virtual void drawVerticalLine(int x, int y, int h, color_t color);
-        /*! Initialize the display
-         *  ======================
+        /*! 
          *  The display is configured and made ready to work.  This function *must* be called
          *  before anything can happen on the screen, and it *should* be called before any other function.
          *
@@ -251,8 +247,7 @@ class DisplayCore : public Print
          *      tft.initializeDevice();
          */
         virtual void initializeDevice() = 0;
-        /*! Turn on the display
-         *  ===================
+        /*!
          *  Enable the video output of the display (if supported).
          *
          *  Example:
@@ -260,8 +255,7 @@ class DisplayCore : public Print
          *      tft.displayOn();
          */
         virtual void displayOn() = 0;
-        /*! Turn off the display
-         *  ====================
+        /*!
          *  Disable the video output of the display (if supported).
          *
          *  Example:
@@ -269,8 +263,7 @@ class DisplayCore : public Print
          *      tft.displayOff();
          */
         virtual void displayOff() = 0;
-        /*! Invert the display colours
-         *  ==========================
+        /*!
          *  All colours become reversed.  Black becomes white, red becomes cyan, etc.
          *
          *  Example:
@@ -278,71 +271,66 @@ class DisplayCore : public Print
          *      tft.invertDisplay(true);
          */
         virtual void invertDisplay(boolean i) = 0;
-         /**@}*/
-        virtual int stringWidth(const char *text);
-        virtual int stringHeight(const char *text);
-
-        virtual void openWindow(int x0, int y0, int x1, int y1);
-        virtual void windowData(color_t d);
-        virtual void windowData(const color_t *d, int l);
-        virtual void closeWindow();
-
-        virtual color_t colorAt(int x, int y);
-        virtual void getRectangle(int x, int y, int w, int h, color_t *buf);
-
-        /*! Start buffered mode
-         *  ===================
-         *  In buffered mode, where applicable, any data that would be sent to
-         *  the screen is delayed until buffered mode is ended.  This generally
-         *  has no effect on most screens, but those that use their own driver
-         *  level may use this to delay pushing out of the buffer to the screen.
-         */
-        virtual void startBuffer() {}
-
-        /*! End buffered mode
-         *  =================
-         *  Any changes that are pending will be pushed out to the screen. See
-         *  `startBuffer()` for more information.
-         */
-        virtual void endBuffer() {}
-
-        /*! Enable Back Light
-         *  =================
+        /*!
          *  For devices with their own backlight control this function will turn
          *  the backlight on. The brightness should be either the default brightness
          *  (typically full on) or the last brightness set with `setBacklight()`.
          */
         virtual void enableBacklight() {}
-        /*! Disable Back Light
-         *  ==================
+        /*!
          *  For devices with their own backlight control this function will turn
          *  the backlight off.
          */
         virtual void disableBacklight() {}
-        /*! Set Back Light Brightness
-         *  =========================
+        /*!
          *  For devices with their own backlight control this function will set the
          *  brightness of the backlight.
          */
         virtual void setBacklight(int __attribute__((unused)) b) {}
+        virtual int getWidth();
+        virtual int getHeight();
 
-        /*! Get Port Data
-         *  =============
-         *  Utility function toget the information about an IO port for high speed
+        /*! @} */
+
+
+        /*! \name Window functions
+         *  @{
+         */
+        virtual void openWindow(int x0, int y0, int x1, int y1);
+        virtual void windowData(color_t d);
+        virtual void windowData(const color_t *d, int l);
+        virtual void closeWindow();
+        /*! @} */
+
+
+        /*! \name Buffering
+         * @{
+         */
+
+        /*! 
+         *  In buffered mode, where applicable, any data that would be sent to
+         *  the screen is delayed until buffered mode is ended.  This generally
+         *  has no effect on most screens, but those that use their own driver
+         *  level framebuffer may use this to delay pushing out of the buffer 
+         *  to the screen.
+         */
+        virtual void startBuffer() {}
+
+        /*!
+         *  Any changes that are pending will be pushed out to the screen. See
+         *  `startBuffer()` for more information.
+         */
+        virtual void endBuffer() {}
+
+        /*! @} */
+
+
+        /*!
+         *  Utility function to get the information about an IO port for high speed
          *  access.
          */
 #if defined(__PIC32MX__) || defined(__PIC32MZ__)
         p32_ioport *getPortInformation(uint8_t pin, uint32_t *mask);
-#endif
-
-
-
-#if ARDUINO >= 100
-        virtual size_t write(uint8_t c);
-        virtual size_t write(const uint8_t *buffer, size_t size);
-#else
-        virtual void write(uint8_t c);
-        virtual void write(const uint8_t *buffer, size_t size);
 #endif
 
         /*! The text cursor X position */
@@ -361,44 +349,25 @@ class DisplayCore : public Print
         int _height;
         /*! Current rotation */
         int rotation;
-        int drawChar(int x, int y, unsigned char c, color_t color, color_t bg);
 
-        /*! Get screen width
-         *  ================
-         *  Returns the width (in pixels) of the screen.
-         *
-         *  Example:
-         *
-         *    int width = tft.getWidth();
+        /*! \name Clipping
+         * @{
          */
-        virtual int getWidth();
-        /*! Get screen height
-         *  =================
-         *  Returns the height (in pixels) of the screen.
-         *
-         *  Example:
-         *
-         *    int height = tft.getHeight();
-         */
-        virtual int getHeight();
+        boolean clipToScreen(int &x, int &y, int &w, int &h);
+        void setClipping(int x0, int y0, int x1, int y1);
+        void clearClipping();
+        /*! @} */
 
-        point3d rgb2xyz(color_t c);
-        point3d xyz2lab(point3d c);
-        double deltaE(point3d labA, point3d labB);
-        uint32_t deltaOrth(color_t c1, color_t c2);
-        static uint32_t rgb2hsv(color_t rgb);
-        static color_t hsv2rgb(uint32_t hsv);
+        /*! \name Helper functions
+         * @{
+         */
 
         void drawCircleHelper( int x0, int y0, int r, int cornername, color_t color);
         void fillCircleHelper(int x0, int y0, int r, int cornername, int delta, color_t color);
-
-        color_t mix(color_t a, color_t b, int pct);
-
-        boolean clipToScreen(int &x, int &y, int &w, int &h);
-
         void fatalError(const char *title, const char *message);
+        virtual void translateCoordinates(int *x, int *y);
+        /*! @} */
 
-        uint32_t color2rgb(color_t c);
 
         int _clip_x0;
         int _clip_x1;
@@ -412,6 +381,7 @@ class DisplayCore : public Print
     protected:
         /*! A pointer to the currently selected font table */
         const uint8_t *font;
+        Font *advancedFont;
 
         int winx0;
         int winy0;
@@ -426,36 +396,30 @@ class DisplayCore : public Print
 
 class Touch {
     public:
-        /*! Create a new touch screen object
-         *  ================================
+        /*! 
          *  This takes a pointer to a communication device, and the width and height of the touch screen.
          */
         Touch(int w, int h) : _width(w), _height(h) {}
-        /*! Initialize the device
-         *  =====================
+        /*!
          *  This configures and enables the touch screen device. It should be called before any other touch screen
          *  functions.
          */
         virtual void initializeDevice() = 0;
-        /*! Get X coordinate
-         *  ================
+        /*!
          *  This returns the X coordinate of the current touch position.
          */
         virtual int x() = 0;
-        /*! Get Y coordinate
-         *  ================
+        /*!
          *  This returns the Y coordinate of the current touch position.
          */
         virtual int y() = 0;
-        /*! Get pressed status
-         *  ==================
+        /*!
          *  Returns true if the touch screen is pressed, false otherwise.
          */
         virtual int rawX() { return x(); }
         virtual int rawY() { return y(); }
         virtual boolean isPressed() = 0;
-        /*! Calculate the touch pressure
-         *  ============================
+        /*!
          *  For touch screens that can calculate how hard you are pressing them, this returns the pressure value.  For others it returns 0.
          *
          *  Example:
@@ -463,15 +427,13 @@ class Touch {
          *      int pressure = ts.pressure();
          */
         virtual int pressure() { return 0; }
-        /*! Set rotation
-         *  ============
+        /*! 
          *  This sets the screen orientation of the touch screen.  It should be set to the same as the
          *  rotation used for the screen.
          */
         virtual void setRotation(int r) = 0;
 
-        /*! Sample the touch screen
-         *  =======================
+        /*! 
          *  This performs a sampling of the touch screen to get the current coordinates and touch status.
          *  It should be called regularly to update the current touch screen data.
          */

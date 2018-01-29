@@ -1,11 +1,7 @@
 #include <DisplayCore.h>
 #include <stdarg.h>
 
-/*! \name Image drawing
- *  These routines are used for drawing basic bitmap images to the screen.
- */
-/*! Draw a 1-bit bitmap image
- *  =========================
+/*!
  *  A 1-bit bitmap image is a byte array where each byte represents 8 contiguous pixels.
  *  The image is rendered to the screen as naturally transparent, with set bits rendered in (color)
  *  and unset bits skipped.  The image is rendered with the upper left corner at (x,y) and the image
@@ -38,8 +34,7 @@ void DisplayCore::drawBitmap(int x, int y, const uint8_t *bitmap, int w, int h, 
     endBuffer();
 }
 
-/*! Draw an RGB (565) image
- *  =======================
+/*!
  *  A 565 raw RGB image is rendered to the screen at (x,y).  The image data is stored
  *  as an array of 16-bit values, and is (w,h) pixels in size.
  *
@@ -58,8 +53,7 @@ void DisplayCore::drawRGB(int x, int y, const color_t *bitmap, int w, int h) {
     endBuffer();
 }
 
-/*! Draw a transparent RGB (565) image
- *  ==================================
+/*!
  *  A 565 raw RGB image is rendered to the screen at (x,y).  The image data is stored
  *  as an array of 16-bit values, and is (w,h) pixels in size.  Any pixels with colour
  *  (trans) are skipped.

@@ -1,8 +1,7 @@
 #include <DisplayCore.h>
 #include <stdarg.h>
 
-/*! Draw a circle
- *  =============
+/*!
  *  This function draws the outline of a circle.  Its center is at (x0, y0), it has radis (r) and is drawn in colour (color).
  *
  *  Example:
@@ -44,8 +43,7 @@ void DisplayCore::drawCircle(int x0, int y0, int r, color_t color) {
     endBuffer();
 }
 
-/*! Draw a filled circle
- *  ====================
+/*!
  *  This function draws a filled circle.  It is highly optimised to get the maximum possible speed out of it.
  *
  *  Like the drawCircle function it centers the circle at (x0, y0), has radius (radius) and is drawn in (color).

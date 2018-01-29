@@ -1,8 +1,7 @@
 #include <DisplayCore.h>
 #include <stdarg.h>
 
-/*! Draw a rectangle
- *  ================
+/*!
  *  This function uses accelerated line drawing routines if available.  It draws a rectangle on the
  *  screen.  The upper-left corner of the rectangle is at (x, y), and it extends to the right and down
  *  for a distance of (w) and (h) pixels respectively.  It is drawn in colour (color).
@@ -20,8 +19,7 @@ void DisplayCore::drawRectangle(int x, int y, int w, int h, color_t color) {
     endBuffer();
 }
 
-/*! Draw a rectangle
- *  ================
+/*!
  *  This function draws a filled rectangle on the screen.  
  *  The upper-left corner of the rectangle is at (x, y), and it extends to the right and down
  *  for a distance of (w) and (h) pixels respectively.  It is drawn in colour (color).
@@ -43,8 +41,7 @@ void DisplayCore::fillRectangle(int x, int y, int w, int h, color_t color) {
     endBuffer();
 }
 
-/*! Fill the screen with a colour
- *  =============================
+/*!
  *  This function fills the entire screen with a solid colour.
  * 
  *  Example: 
@@ -58,8 +55,7 @@ void DisplayCore::fillScreen(color_t color) {
     endBuffer();
 }
 
-/*! Draw a rounded rectangle
- *  ========================
+/*!
  *  A rounded rectangle is a normal rectangle but with the corners rounded off.
  *  It is drawn with the upper-left corner at (x,y) and a width of (w) and height of (h).
  *  The corners are rounded off at a radius of (r) pixels, and it is drawn in colour (color).
@@ -83,8 +79,7 @@ void DisplayCore::drawRoundRect(int x, int y, int w, int h, int r, color_t color
     endBuffer();
 }
 
-/*! Draw a filled rounded rectangle
- *  ===============================
+/*!
  *  A rounded rectangle is a normal rectangle but with the corners rounded off.
  *  It is drawn with the upper-left corner at (x,y) and a width of (w) and height of (h).
  *  The corners are rounded off at a radius of (r) pixels, and it is drawn (and filled) in colour (color).

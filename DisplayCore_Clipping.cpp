@@ -1,8 +1,7 @@
 #include <DisplayCore.h>
 #include <stdarg.h>
 
-/*! Set clipping boundaries
- *  =======================
+/*!
  *  The clipping boundaries limit where a pixel can be drawn on the screen. It allows
  *  you to define an area where primitives will be drawn within and any portion outside
  *  the clipping area will be discarded.
@@ -18,9 +17,7 @@ void DisplayCore::setClipping(int x0, int y0, int x1, int y1) {
     _clip_y1 = y1;
 }
 
-/*! Clear clipping boundaries
- *  =========================
- *
+/*!
  *  Remove the clipping boundary imposed by setClipping().
  *
  *  Example:

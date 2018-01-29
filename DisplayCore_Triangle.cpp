@@ -3,8 +3,7 @@
 
 #include "swap.h"
 
-/*! Draw a triangle
- *  ===============
+/*!
  *  A simple three lines joined together to form a triangle.  The three points of the triangle are defined
  *  as (x0, y0), (x1, y1) and (x2, y2).  It is drawn in colour (color).
  *
@@ -20,8 +19,7 @@ void DisplayCore::drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, c
     endBuffer();
 }
 
-/*! Draw a filled triangle
- *  ======================
+/*!
  *  A simple three lines joined together to form a triangle.  The three points of the triangle are defined
  *  as (x0, y0), (x1, y1) and (x2, y2).  It is drawn in colour (color).
  *
