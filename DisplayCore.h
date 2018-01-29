@@ -203,6 +203,7 @@ class DisplayCore : public Print
         virtual void setTextWrap(boolean w);
         virtual void setFont(const uint8_t *f);
         virtual void setFont(Font &f);
+        virtual void setFont(Font *f);
         virtual int stringWidth(const char *text);
         virtual int stringHeight(const char *text);
         int drawChar(int x, int y, unsigned char c, color_t color, color_t bg);

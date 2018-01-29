@@ -553,6 +553,11 @@ void DisplayCore::setFont(Font &f) {
     advancedFont = &f;
 }
 
+void DisplayCore::setFont(Font *f) {
+    font = NULL;
+    advancedFont = f;
+}
+
 /*!
  *  Returns the currently selected foreground colour.
  *
