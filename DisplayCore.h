@@ -118,7 +118,7 @@ class DisplayCore;
 
 // The new font abstration base class. Implements the normal font system as default.
 class Font {
-    private:
+    protected:
         const uint8_t *_fontData;
 
     public:
