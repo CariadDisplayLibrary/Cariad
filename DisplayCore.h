@@ -195,12 +195,12 @@ class DisplayCore : public Print
         virtual void setCursorY(int y);
         virtual int getCursorX();
         virtual int getCursorY();
-        virtual int getCursor(boolean x);
+        virtual int getCursor(bool x);
         virtual void setTextColor(color_t c);
         virtual void setTextColor(color_t fg, color_t bg);
         virtual color_t getTextColor();
         virtual void invertTextColor();
-        virtual void setTextWrap(boolean w);
+        virtual void setTextWrap(bool w);
         virtual void setFont(const uint8_t *f);
         virtual void setFont(Font &f);
         virtual void setFont(Font *f);
@@ -271,7 +271,7 @@ class DisplayCore : public Print
          *
          *      tft.invertDisplay(true);
          */
-        virtual void invertDisplay(boolean i) = 0;
+        virtual void invertDisplay(bool i) = 0;
         /*!
          *  For devices with their own backlight control this function will turn
          *  the backlight on. The brightness should be either the default brightness
@@ -339,7 +339,7 @@ class DisplayCore : public Print
         /*! The text cursor Y position */
         int cursor_y;
         /*! Whether or not text wrapping is enabled */
-        boolean wrap;
+        bool wrap;
         /*! Text foreground colour */
         color_t textcolor;
         /*! Text background colour */
@@ -354,7 +354,7 @@ class DisplayCore : public Print
         /*! \name Clipping
          * @{
          */
-        boolean clipToScreen(int &x, int &y, int &w, int &h);
+        bool clipToScreen(int &x, int &y, int &w, int &h);
         void setClipping(int x0, int y0, int x1, int y1);
         void clearClipping();
         /*! @} */
@@ -419,7 +419,7 @@ class Touch {
          */
         virtual int rawX() { return x(); }
         virtual int rawY() { return y(); }
-        virtual boolean isPressed() = 0;
+        virtual bool isPressed() = 0;
         /*!
          *  For touch screens that can calculate how hard you are pressing them, this returns the pressure value.  For others it returns 0.
          *
@@ -503,7 +503,7 @@ class Image : public DisplayCore {
         void initializeDevice() {}
         void displayOn() {}
         void displayOff() {}
-        void invertDisplay(boolean __attribute__((unused)) i) {}
+        void invertDisplay(bool __attribute__((unused)) i) {}
 
         int _width;
         int _height;
@@ -540,9 +540,9 @@ class Widget : public Image {
         int _y;
         int _value;
         uint32_t _user;
-        boolean _redraw;
+        bool _redraw;
         uint32_t _dbStart;
-        boolean _dbPressed;
+        bool _dbPressed;
 
         int _sx;
         int _sy;
@@ -558,9 +558,9 @@ class Widget : public Image {
         int _tx;
         int _ty;
 
-        boolean _active;
-        boolean _touch;
-        boolean _enabled;
+        bool _active;
+        bool _touch;
+        bool _enabled;
 
         void (*_press)(Event *);
         void (*_release)(Event *);
@@ -615,10 +615,10 @@ class Widget : public Image {
 
         virtual void redraw();
 
-        virtual void setEnabled(boolean e);
-        virtual boolean isEnabled();
+        virtual void setEnabled(bool e);
+        virtual bool isEnabled();
 
-        virtual boolean isActive();
+        virtual bool isActive();
 
         void setLocation(int x, int y) { _x = x; _y = y; }
 

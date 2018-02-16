@@ -19,7 +19,7 @@ void DisplayCore::drawBezier(
 ) {
     startBuffer();
 
-    boolean first = true;
+    bool first = true;
     double points = 1.0/(double)resolution;
     double t = 0.0, sx = 0, sy = 0;
     double ex, ey;
@@ -63,7 +63,7 @@ void DisplayCore::fillBezier(
 
     startBuffer();
 
-    boolean first = true;
+    bool first = true;
     double points = 1.0/(double)resolution;
     double t = 0.0, sx = 0, sy = 0;
     double ex, ey;

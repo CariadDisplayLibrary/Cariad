@@ -31,7 +31,7 @@ void DisplayCore::clearClipping() {
     _clip_y1 = getHeight() - 1;
 }
 
-boolean DisplayCore::clipToScreen(int &x, int &y, int &w, int &h) {
+bool DisplayCore::clipToScreen(int &x, int &y, int &w, int &h) {
     if (x < 0) {
         w += x;
         x = 0;

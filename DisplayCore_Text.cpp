@@ -478,7 +478,7 @@ int DisplayCore::getCursorY() {
  *      int x = tft.getCursor(true);
  *      int y = tft.getCursor(false);
  */
-int DisplayCore::getCursor(boolean x) {
+int DisplayCore::getCursor(bool x) {
     if( x )
         return cursor_x;
     return cursor_y;
@@ -531,7 +531,7 @@ void DisplayCore::invertTextColor( ){
  * 
  *      tft.setTextWrap(false);
  */
-void DisplayCore::setTextWrap(boolean w) {
+void DisplayCore::setTextWrap(bool w) {
   wrap = w;
 }
 

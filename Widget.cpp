@@ -64,7 +64,7 @@ void Widget::handleTouch() {
         return;
     }
 
-    boolean pressed = _ts->isPressed();
+    bool pressed = _ts->isPressed();
 
     if (pressed != _dbPressed) {
         _dbPressed = pressed;
@@ -90,7 +90,7 @@ void Widget::handleTouch() {
         _ty = _ts->y();
     }
 
-    boolean inBounds = (
+    bool inBounds = (
         (_tx >= (_x + _sense_x)) && (_tx < (_x + _sense_x + _sense_w)) &&
         (_ty >= (_y + _sense_y)) && (_ty < (_y + _sense_y + _sense_h))
     );
@@ -218,17 +218,17 @@ void Widget::redraw() {
     _redraw = true;
 }
 
-void Widget::setEnabled(boolean e) {
+void Widget::setEnabled(bool e) {
     if (e != _enabled) {
         _redraw = true;
     }
     _enabled = e;
 }
 
-boolean Widget::isEnabled() {
+bool Widget::isEnabled() {
     return _enabled;
 }
 
-boolean Widget::isActive() {
+bool Widget::isActive() {
     return _active;
 }
