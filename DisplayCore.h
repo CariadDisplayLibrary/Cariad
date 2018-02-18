@@ -156,6 +156,7 @@ class DisplayCore : public Print
         virtual void fillRectangle(int x, int y, int w, int h, color_t color);
         virtual void fillScreen(color_t color);
         virtual void setPixel(int x, int y, color_t color) = 0;
+        virtual void setPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b);
         virtual void drawHorizontalLine(int x, int y, int w, color_t color);
         virtual void drawVerticalLine(int x, int y, int h, color_t color);
 
