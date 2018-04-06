@@ -11,6 +11,7 @@ DisplayCore_3D_Polygon.cpp libraries/DisplayCore/DisplayCore
 DisplayCore_3D_Ray.cpp libraries/DisplayCore/DisplayCore
 DisplayCore_3D_Scene.cpp libraries/DisplayCore/DisplayCore
 DisplayCore_Bezier.cpp libraries/DisplayCore/DisplayCore
+DisplayCore_Buffer.cpp libraries/DisplayCore/DisplayCore
 DisplayCore_Circle.cpp libraries/DisplayCore/DisplayCore
 DisplayCore_Clipping.cpp libraries/DisplayCore/DisplayCore
 DisplayCore_Filter.cpp libraries/DisplayCore/DisplayCore

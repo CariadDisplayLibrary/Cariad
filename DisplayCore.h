@@ -316,13 +316,13 @@ class DisplayCore : public Print
          *  level framebuffer may use this to delay pushing out of the buffer 
          *  to the screen.
          */
-        virtual void startBuffer() {}
+        virtual void startBuffer();
 
         /*!
          *  Any changes that are pending will be pushed out to the screen. See
          *  `startBuffer()` for more information.
          */
-        virtual void endBuffer() {}
+        virtual void endBuffer();
 
         /*! @} */
 
