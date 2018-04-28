@@ -71,10 +71,10 @@ class point3d {
             x2 = number * 0.5F;
             y2  = number;
             float *y2fp = &y2;
-            long *y2lp = (long *)y2fp;
+            int32_t *y2lp = (int32_t *)y2fp;
             i  = *y2lp;
             i  = 0x5f3759df - ( i >> 1 );
-            long *ilp = &i;
+            int32_t *ilp = &i;
             float *ifp = (float *)ilp;
             y2  = *ifp;
             y2  = y2 * ( threehalfs - ( x2 * y2 * y2 ) );
@@ -486,6 +486,7 @@ class Image : public DisplayCore {
         virtual int getWidth() { return _width; }
         virtual int getHeight() { return _height; }
 
+
         virtual void draw(DisplayCore *dev, int x, int y) = 0;
         virtual void draw(DisplayCore *dev, int x, int y, color_t t) = 0;
         virtual void drawTransformed(DisplayCore *dev, int x, int y, int transform) = 0;
@@ -495,6 +496,10 @@ class Image : public DisplayCore {
         void draw(DisplayCore &dev, int x, int y, color_t t) { draw(&dev, x, y, t); }
         void drawTransformed(DisplayCore &dev, int x, int y, int transform) { drawTransformed(&dev, x, y, transform); }
         void drawTransformed(DisplayCore &dev, int x, int y, int __attribute__((unused)) transform, color_t t) { drawTransformed(&dev, x, y, t); }
+
+        void draw(DisplayCore *dev) { draw(dev, 0, 0); }
+        void draw(DisplayCore &dev) { draw(&dev, 0, 0); }
+
 
         void setFilter(Filter &f) { _filter = &f; };
         void removeFilter() { _filter = NULL; };
