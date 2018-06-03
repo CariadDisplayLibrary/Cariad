@@ -6,17 +6,17 @@ void DisplayCore::translateCoordinates(int *x, int *y) {
     switch (rotation) {
         case 1:
             t = *x;
-            *x = getWidth() - *y;
+            *x = getWidth() - *y - 1;
             *y = t;
             break;
         case 2:
-            *x = getWidth() - *x;
-            *y = getHeight() - *y;
+            *x = getWidth() - *x - 1;
+            *y = getHeight() - *y - 1;
             break;
         case 3:
             t = *x;
             *x = *y;
-            *y = getHeight() - t;
+            *y = getHeight() - t - 1;
             break;
     }
 }
