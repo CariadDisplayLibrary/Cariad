@@ -266,6 +266,10 @@ color_t DisplayCore::hsv2rgb(uint32_t hsv) {
  *      unsigned int yellow = tft.mix(Color::Red, Color::Green, 128);
  */
 color_t DisplayCore::mix(color_t a, color_t b, int pct) {
+
+    if (pct <= 0) return a;
+    if (pct >= 255) return b;
+
     Color565 col_a;
     Color565 col_b;
     Color565 col_out;
