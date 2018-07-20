@@ -260,7 +260,7 @@ int DisplayCore::drawChar(int x, int y, unsigned char c, color_t color, color_t 
 
     if (bg != color) {
         for (uint8_t i = 0; i < nCols; i++) {
-            cmap[i] = mix(bg, color, 255 * i / nCols); //bitmask);
+            cmap[i] = mix(bg, color, 255 * i / bitmask);
         }
 
         openWindow(x, y, charwidth, header->linesPerCharacter);
@@ -349,7 +349,7 @@ int Font::drawChar(DisplayCore *dev, int x, int y, unsigned char c, color_t colo
 
     if (bg != color) {
         for (uint8_t i = 0; i < nCols; i++) {
-            cmap[i] = dev->mix(bg, color, 255 * i / nCols); //bitmask);
+            cmap[i] = dev->mix(bg, color, 255 * i / bitmask);
         }
 
         dev->openWindow(x, y, charwidth, header->linesPerCharacter);
