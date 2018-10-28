@@ -11,7 +11,7 @@ Architecture: all
 XBSC-Group: DisplayCore
 XBSC-Subgroup: Core
 Provides: DisplayCore.h
-Description: DisplayCore core files
+Description: Core files
  These are the main core files for the DisplayCore system. 
  All the other libraries rely on these files.
 
