@@ -160,7 +160,7 @@ void DisplayCore::write(uint8_t c) {
             cursor_y += header->linesPerCharacter;
             cursor_x = 0;
         } else if (c == '\r') {
-            // skip em
+            cursor_x = 0;
         } else {
             if (c < header->startGlyph) {
                 if (c >= 'A' && c <= 'Z') {
