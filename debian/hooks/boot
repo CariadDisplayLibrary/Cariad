@@ -1,42 +1,73 @@
-#!/usr/bin/perl
+#!/usr/bin/php
+<?php
 
-my $package = 'unknown';
+$package = 'unknown';
 
-my $maj = 0;
-my $min = 0;
+$rel = 2;
+$maj = 0;
+$min = 0;
 
-my $out = '';
+$out = array();
 
-open (CONTROL, '<debian/control');
-while (my $l = <CONTROL>) {
-    chomp($l);
-    if ($l =~ /Source: (.*)/) {
-        $package = $1;
+$control = file_get_contents("debian/control");
+$lines = explode("\n", $control);
+
+foreach ($lines as $line) {
+    if (preg_match("/Source: (.*)/", $line, $m)) {
+        $package = $m[1];
     }
 }
-close(CONTROL);
 
-open(LOG, "git log --reverse --pretty=format:'%aN|%aE|%cD|%s'|");
-while (my $l = <LOG>) {
-    chomp($l);
-    my ($author, $email, $time, $subject) = split(/\|/, $l);
-    my $add ="$package (2.$maj.$min) uecide; urgency=low\n";
-    $add .= "\n";
-    $add .= "  * $subject\n";
-    $add .= "\n";
-    $add .= " -- $author <$email>  $time\n";
-    $add .= "\n";
+$fd = popen("git log --reverse --pretty=format:'%aN|%aE|%cD|%s'", "r");
+while ($l = fgets($fd)) {
+    $l = trim($l);
+    list ($author, $email, $time, $subject) = explode("|", $l);
+    $add = array();
+    $add[] ="$package ($rel.$maj.$min) uecide; urgency=low";
+    $add[] = "";
+    $add[] = "  * $subject";
+    $add[] = "";
+    $add[] = " -- $author <$email>  $time";
+    $add[] = "";
     $min++;
     if ($min == 10) {
         $min = 0;
         $maj++;
     }
-    $out = $add . $out;
+    $out = array_merge($add, $out);
 }
-close(LOG);
+pclose($fd);
 
+file_put_contents("debian/changelog", implode("\n", $out) . "\n");
 
-my $oldMD5 = `md5sum debian/changelog`;
-open(CL, ">debian/changelog");
-print CL $out;
-close(CL);
+// Wind back one version point
+$min--;
+if ($min < 0) {
+    $min = 9;
+    $maj--;
+}
+
+if ($maj < 0) {
+    $maj = 9;
+    $rel--;
+}
+
+$do = false;
+
+if (file_exists("library.json")) {
+    $j = json_decode(file_get_contents("library.json"), true);
+    $j['version'] = "$rel.$maj.$min";
+    file_put_contents("library.json", json_encode($j) . "\n");
+    $do = true;
+}
+
+if (file_exists("uecide.json")) {
+    $j = json_decode(file_get_contents("uecide.json"), true);
+    $j['version'] = "$rel.$maj.$min";
+    file_put_contents("uecide.json", json_encode($j) . "\n");
+    $do = true;
+}
+
+if ($do) {
+    system("mk15 -c Display");
+}
