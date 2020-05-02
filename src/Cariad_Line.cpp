@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 #include "swap.h"
@@ -13,7 +13,7 @@
  *      tft.drawLine(10, 10, 40, 60, Color::Green);
  */
 // bresenham's algorithm - thx wikpedia
-void DisplayCore::drawLine(int x0, int y0, int x1, int y1, color_t color) {
+void Cariad::drawLine(int x0, int y0, int x1, int y1, color_t color) {
     startBuffer();
     int steep = abs(y1 - y0) > abs(x1 - x0);
     if (steep) {
@@ -67,7 +67,7 @@ void DisplayCore::drawLine(int x0, int y0, int x1, int y1, color_t color) {
  *      tft.drawLine(10, 10, 40, 60, 4, Color::Green);
  */
 // bresenham's algorithm - thx wikpedia
-void DisplayCore::drawLine(int x0, int y0, int x1, int y1, int width, color_t color) {
+void Cariad::drawLine(int x0, int y0, int x1, int y1, int width, color_t color) {
     startBuffer();
     int steep = abs(y1 - y0) > abs(x1 - x0);
     if (steep) {
@@ -108,7 +108,7 @@ void DisplayCore::drawLine(int x0, int y0, int x1, int y1, int width, color_t co
     endBuffer();
 }
 
-void DisplayCore::drawHorizontalLine(int x, int y, int w, color_t c) {
+void Cariad::drawHorizontalLine(int x, int y, int w, color_t c) {
     startBuffer();
     for(int z = 0; z < w; z++) {
         setPixel(x + z, y, c);
@@ -116,7 +116,7 @@ void DisplayCore::drawHorizontalLine(int x, int y, int w, color_t c) {
     endBuffer();
 }
 
-void DisplayCore::drawVerticalLine(int x, int y, int h, color_t c) {
+void Cariad::drawVerticalLine(int x, int y, int h, color_t c) {
     startBuffer();
     for(int z = 0; z < h; z++) {
         setPixel(x, y + z, c);

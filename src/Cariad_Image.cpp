@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 /*!
@@ -20,7 +20,7 @@
  *          0b00000000};
  *      tft.drawBitmap(100, 100, letterA, 8, 8, Color::Red);
  */
-void DisplayCore::drawBitmap(int x, int y, const uint8_t *bitmap, int w, int h, color_t color) {
+void Cariad::drawBitmap(int x, int y, const uint8_t *bitmap, int w, int h, color_t color) {
     int i, j, byteWidth = (w + 7) / 8;
 
     startBuffer();
@@ -42,7 +42,7 @@ void DisplayCore::drawBitmap(int x, int y, const uint8_t *bitmap, int w, int h, 
  *
  *    tft.drawRGB(10, 30, myImage, 16, 16);
  */
-void DisplayCore::drawRGB(int x, int y, const color_t *bitmap, int w, int h) {
+void Cariad::drawRGB(int x, int y, const color_t *bitmap, int w, int h) {
     startBuffer();
     int i, j;
     for (j = 0; j < h; j++) {
@@ -62,7 +62,7 @@ void DisplayCore::drawRGB(int x, int y, const color_t *bitmap, int w, int h) {
  *
  *    tft.drawRGBA(10, 30, myImage, 16, 16, Color::Black);
  */
-void DisplayCore::drawRGBA(int x, int y, const color_t *bitmap, int w, int h, color_t trans) {
+void Cariad::drawRGBA(int x, int y, const color_t *bitmap, int w, int h, color_t trans) {
     startBuffer();
     int i, j;
     color_t col;

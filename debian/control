@@ -1,18 +1,19 @@
-Source: libdisplaycore-core
+Source: libcariad-core
 Section: main
 Priority: extra
 Maintainer: Matt Jenkins <matt@majenko.co.uk>
 Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.4
 
-Package: libdisplaycore-core
+Package: libcariad-core
+Replaces: libdisplaycore-core
 Section: main
 Architecture: all
-XBSC-Group: DisplayCore
+XBSC-Group: Cariad
 XBSC-Subgroup: Core
-Provides: DisplayCore.h
+Provides: Cariad.h
 Description: Core files
- These are the main core files for the DisplayCore system. 
+ These are the main core files for the Cariad system. 
  All the other libraries rely on these files.
 
 

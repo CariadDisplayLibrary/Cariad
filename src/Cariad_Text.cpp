@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 /*!
@@ -9,7 +9,7 @@
  *
  *      int width = tft.stringWidth("The quick brown fox jumped over the lazy dog");
  */
-int DisplayCore::stringWidth(const char *text) {
+int Cariad::stringWidth(const char *text) {
     if (advancedFont != NULL) return advancedFont->getStringWidth(text);
     int w = 0;
     if (font == NULL) {
@@ -84,7 +84,7 @@ uint8_t Font::getCharacterWidth(uint8_t c) {
  *
  *      int height = stringHeight("The quick brown fox jumped over the lazy dog");
  */
-int DisplayCore::stringHeight(const char __attribute__((unused)) *text) {
+int Cariad::stringHeight(const char __attribute__((unused)) *text) {
     if (advancedFont != NULL) return advancedFont->getStringHeight(text);
     if (font == NULL) {
         return 0;
@@ -115,7 +115,7 @@ uint8_t Font::getEndGlyph() {
         
 
 #if ARDUINO >= 100
-size_t DisplayCore::write(const uint8_t *buffer, size_t size) {
+size_t Cariad::write(const uint8_t *buffer, size_t size) {
     startBuffer();
     for (size_t i = 0; i < size; i++) {
         write(buffer[i]);
@@ -124,7 +124,7 @@ size_t DisplayCore::write(const uint8_t *buffer, size_t size) {
     return size;
 }
 #else
-void DisplayCore::write(const uint8_t *buffer, size_t size) {
+void Cariad::write(const uint8_t *buffer, size_t size) {
     startBuffer();
     for (size_t i = 0; i < size; i++) {
         write(buffer[i]);
@@ -142,12 +142,12 @@ void DisplayCore::write(const uint8_t *buffer, size_t size) {
  *      tft.write('Q');
  */
 #if ARDUINO >= 100
-size_t DisplayCore::write(uint8_t c) {
+size_t Cariad::write(uint8_t c) {
     if (font == NULL && advancedFont==NULL) {
         return 0;
     }
 #else
-void DisplayCore::write(uint8_t c) {
+void Cariad::write(uint8_t c) {
     if (font == NULL && advancedFont==NULL) {
         return;
     }
@@ -232,7 +232,7 @@ void DisplayCore::write(uint8_t c) {
  *
  *      tft.drawChar(30, 30, 'Q', Color::Red, Color::Blue);
  */
-int DisplayCore::drawChar(int x, int y, unsigned char c, color_t color, color_t bg) {
+int Cariad::drawChar(int x, int y, unsigned char c, color_t color, color_t bg) {
 
     if (font == NULL) {
         return 0;
@@ -325,7 +325,7 @@ int DisplayCore::drawChar(int x, int y, unsigned char c, color_t color, color_t 
 }
 
 // The Font class implementation of the same thing
-int Font::drawChar(DisplayCore *dev, int x, int y, unsigned char c, color_t color, color_t bg) {
+int Font::drawChar(Cariad *dev, int x, int y, unsigned char c, color_t color, color_t bg) {
 
     FontHeader *header = (FontHeader *)_fontData;
 
@@ -420,7 +420,7 @@ int Font::drawChar(DisplayCore *dev, int x, int y, unsigned char c, color_t colo
  *
  *      tft.setCursor(0, 100);
  */
-void DisplayCore::setCursor(int x, int y) {
+void Cariad::setCursor(int x, int y) {
     cursor_x = x;
     cursor_y = y;
 }
@@ -432,7 +432,7 @@ void DisplayCore::setCursor(int x, int y) {
  *
  *      tft.setCursorX(100);
  */
-void DisplayCore::setCursorX(int x) {
+void Cariad::setCursorX(int x) {
     cursor_x = x;
 }
 
@@ -443,7 +443,7 @@ void DisplayCore::setCursorX(int x) {
  *
  *      tft.setCursorY(100);
  */
-void DisplayCore::setCursorY(int y) {
+void Cariad::setCursorY(int y) {
     cursor_y = y;
 }
 
@@ -454,7 +454,7 @@ void DisplayCore::setCursorY(int y) {
  *
  *      int x = tft.getCursorX();
  */
-int DisplayCore::getCursorX() {
+int Cariad::getCursorX() {
     return cursor_x;
 }
 
@@ -465,7 +465,7 @@ int DisplayCore::getCursorX() {
  *
  *      int y = tft.getCursorY();
  */
-int DisplayCore::getCursorY() {
+int Cariad::getCursorY() {
     return cursor_y;
 }
 
@@ -478,7 +478,7 @@ int DisplayCore::getCursorY() {
  *      int x = tft.getCursor(true);
  *      int y = tft.getCursor(false);
  */
-int DisplayCore::getCursor(bool x) {
+int Cariad::getCursor(bool x) {
     if( x )
         return cursor_x;
     return cursor_y;
@@ -491,7 +491,7 @@ int DisplayCore::getCursor(bool x) {
  *
  *      tft.setTextColor(Color::Magenta);
  */
-void DisplayCore::setTextColor(color_t c) {
+void Cariad::setTextColor(color_t c) {
     textcolor = c;
 }
 
@@ -504,7 +504,7 @@ void DisplayCore::setTextColor(color_t c) {
  *
  *      tft.setTextColor(Color::Red, Color::Blue);
  */
-void DisplayCore::setTextColor(color_t fg, color_t bg) {
+void Cariad::setTextColor(color_t fg, color_t bg) {
    textcolor = fg;
    textbgcolor = bg;
     bgColor = bg;
@@ -517,7 +517,7 @@ void DisplayCore::setTextColor(color_t fg, color_t bg) {
  *
  *      tft.invertTextColor();
  */
-void DisplayCore::invertTextColor( ){
+void Cariad::invertTextColor( ){
 	setTextColor( textbgcolor, textcolor );
 }
 
@@ -531,7 +531,7 @@ void DisplayCore::invertTextColor( ){
  * 
  *      tft.setTextWrap(false);
  */
-void DisplayCore::setTextWrap(bool w) {
+void Cariad::setTextWrap(bool w) {
   wrap = w;
 }
 
@@ -543,17 +543,17 @@ void DisplayCore::setTextWrap(bool w) {
  * 
  *      tft.setFont(Fonts::Ubuntu12);
  */
-void DisplayCore::setFont(const uint8_t *f) {
+void Cariad::setFont(const uint8_t *f) {
     font = f;
     advancedFont = NULL;
 }
 
-void DisplayCore::setFont(Font &f) {
+void Cariad::setFont(Font &f) {
     font = NULL;
     advancedFont = &f;
 }
 
-void DisplayCore::setFont(Font *f) {
+void Cariad::setFont(Font *f) {
     font = NULL;
     advancedFont = f;
 }
@@ -565,7 +565,7 @@ void DisplayCore::setFont(Font *f) {
  *
  *      unsigned int color = tft.getTextColor();
  */
-color_t DisplayCore::getTextColor() {
+color_t Cariad::getTextColor() {
     return textcolor;
 }
 

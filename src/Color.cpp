@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 /**@{*/
@@ -10,7 +10,7 @@
  *
  *      unsigned int yellow = tft.color565(255, 255, 0);
  */
-color_t DisplayCore::color565(uint8_t r, uint8_t g, uint8_t b) {
+color_t Cariad::color565(uint8_t r, uint8_t g, uint8_t b) {
     return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
 
@@ -22,7 +22,7 @@ color_t DisplayCore::color565(uint8_t r, uint8_t g, uint8_t b) {
  *
  *      point3d color = tft.rgb2xyz(Color::Cyan);
  */
-point3d DisplayCore::rgb2xyz(color_t rgb) {
+point3d Cariad::rgb2xyz(color_t rgb) {
     uint8_t red = rgb >> 11;
     uint8_t green = rgb >> 5 & 0b111111;
     uint8_t blue = rgb & 0b11111;
@@ -73,7 +73,7 @@ point3d DisplayCore::rgb2xyz(color_t rgb) {
  *
  *      point3d labcolor = tft.xyz2lab(color3d);
  */
-point3d DisplayCore::xyz2lab(point3d xyz) {
+point3d Cariad::xyz2lab(point3d xyz) {
     point3d lab;
 
     double x = xyz.x / 100.0;
@@ -112,7 +112,7 @@ point3d DisplayCore::xyz2lab(point3d xyz) {
  *
  *      double delta = tft.deltaE(colorA, colorB);
  */
-double DisplayCore::deltaE(point3d labA, point3d labB) {
+double Cariad::deltaE(point3d labA, point3d labB) {
     return sqrt(
         (pow(labA.x - labB.x, 2.0))
         + (pow(labA.y - labB.y, 2.0))
@@ -128,7 +128,7 @@ double DisplayCore::deltaE(point3d labA, point3d labB) {
  *
  *      unsigned long delta = tft.deltaOrth(Color::Yellow, Color::Orange);
  */
-uint32_t DisplayCore::deltaOrth(color_t c1, color_t c2) {
+uint32_t Cariad::deltaOrth(color_t c1, color_t c2) {
     uint32_t hsv1 = rgb2hsv(c1);
     uint32_t hsv2 = rgb2hsv(c2);
 
@@ -155,7 +155,7 @@ uint32_t DisplayCore::deltaOrth(color_t c1, color_t c2) {
  *
  *      unsigned long hsv = tft.rgb2hsv(Color::Green);
  */
-uint32_t DisplayCore::rgb2hsv(color_t rgb)
+uint32_t Cariad::rgb2hsv(color_t rgb)
 {
     uint8_t r = rgb >> 11;
     uint8_t g = rgb >> 5 & 0b111111;
@@ -197,7 +197,7 @@ uint32_t DisplayCore::rgb2hsv(color_t rgb)
     return (h << 16) | (s << 8) | v;
 }
 
-color_t DisplayCore::hsv2rgb(uint32_t hsv) {
+color_t Cariad::hsv2rgb(uint32_t hsv) {
     int hue = (hsv >> 16) & 0xFF;
     int sat = (hsv >> 8) & 0xFF;
     int val = hsv & 0xFF;
@@ -265,7 +265,7 @@ color_t DisplayCore::hsv2rgb(uint32_t hsv) {
  *
  *      unsigned int yellow = tft.mix(Color::Red, Color::Green, 128);
  */
-color_t DisplayCore::mix(color_t a, color_t b, int pct) {
+color_t Cariad::mix(color_t a, color_t b, int pct) {
 
     if (pct <= 0) return a;
     if (pct >= 255) return b;
@@ -286,7 +286,7 @@ color_t DisplayCore::mix(color_t a, color_t b, int pct) {
 }
 
 
-uint32_t DisplayCore::color2rgb(color_t rgb) {
+uint32_t Cariad::color2rgb(color_t rgb) {
     uint8_t red = rgb >> 11;
     uint8_t green = rgb >> 5 & 0b111111;
     uint8_t blue = rgb & 0b11111;

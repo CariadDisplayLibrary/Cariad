@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 /*!
@@ -8,7 +8,7 @@
  *  
  *      tft.openWindow(0, 0, 100, 100);
  */
-void DisplayCore::openWindow(int x0, int y0, int x1, int y1) {
+void Cariad::openWindow(int x0, int y0, int x1, int y1) {
     winx0 = x0;
     winy0 = y0;
     winx1 = x0 + x1;
@@ -25,7 +25,7 @@ void DisplayCore::openWindow(int x0, int y0, int x1, int y1) {
  *
  *      tft.windowData(Color::Red);
  */
-void DisplayCore::windowData(color_t d) {
+void Cariad::windowData(color_t d) {
     setPixel(winx0 + winpx, winy0 + winpy, d);
     winpx++;
     if ((winx0 + winpx) >= winx1) {
@@ -45,7 +45,7 @@ void DisplayCore::windowData(color_t d) {
  *
  *      tft.windowData(myData, 1000);
  */
-void DisplayCore::windowData(const color_t *d, int l) {
+void Cariad::windowData(const color_t *d, int l) {
     for (int i = 0; i < l; i++) {
         windowData(d[i]);
     }
@@ -60,7 +60,7 @@ void DisplayCore::windowData(const color_t *d, int l) {
  *      tft.closeWindow();
  */
 
-void DisplayCore::closeWindow() {
+void Cariad::closeWindow() {
     endBuffer();
 }
 

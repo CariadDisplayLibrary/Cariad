@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 #ifndef max
@@ -35,7 +35,7 @@ color_t rgb(uint8_t r, uint8_t g, uint8_t b) {
  *
  *      tft.fatalError("MEMORY ERROR", "Unable to allocate space for objects");
  */
-void DisplayCore::fatalError(const char *title, const char *message) {
+void Cariad::fatalError(const char *title, const char *message) {
     int width = getWidth();
     int height = getHeight();
     for (int y = 0; y < height; y++) {

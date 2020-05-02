@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 /*!
@@ -8,11 +8,11 @@
  *
  *      unsigned int color = tft.colorAt(100, 100);
  */
-color_t DisplayCore::colorAt(int __attribute__((unused)) x, int __attribute__((unused)) y) {
+color_t Cariad::colorAt(int __attribute__((unused)) x, int __attribute__((unused)) y) {
     return bgColor;
 }
 
-void DisplayCore::getRectangle(int __attribute__((unused)) x, int __attribute__((unused)) y, int w, int h, color_t *buf) {
+void Cariad::getRectangle(int __attribute__((unused)) x, int __attribute__((unused)) y, int w, int h, color_t *buf) {
     for (int i = 0; i < w*h; i++) {
         buf[i] = bgColor;
     }

@@ -1,7 +1,7 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
-point2d DisplayCore::map3Dto2D(point3d &d) {
+point2d Cariad::map3Dto2D(point3d &d) {
     point2d p2d;
 
     p2d.x = d.x * _fov / d.z + (getWidth() / 2);

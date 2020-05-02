@@ -1,7 +1,7 @@
 #ifndef _COLOR_H
 #define _COLOR_H
 
-#include <DisplayCore.h>
+#include <Cariad.h>
 
 class Color {
     public:

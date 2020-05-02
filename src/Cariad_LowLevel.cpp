@@ -1,7 +1,7 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
-void DisplayCore::translateCoordinates(int *x, int *y) {
+void Cariad::translateCoordinates(int *x, int *y) {
     int t;
     switch (rotation) {
         case 1:
@@ -22,7 +22,7 @@ void DisplayCore::translateCoordinates(int *x, int *y) {
 }
 
 #if defined(__PIC32MX__) || defined(__PIC32MZ__)
-p32_ioport *DisplayCore::getPortInformation(uint8_t pin, uint32_t *mask) {
+p32_ioport *Cariad::getPortInformation(uint8_t pin, uint32_t *mask) {
     uint32_t portno = digitalPinToPort(pin);
     if (portno == NOT_A_PIN) {
         return NULL;
@@ -34,15 +34,15 @@ p32_ioport *DisplayCore::getPortInformation(uint8_t pin, uint32_t *mask) {
 }
 #endif
 
-int DisplayCore::getWidth() {
+int Cariad::getWidth() {
     return _width;
 }
 
-int DisplayCore::getHeight() {
+int Cariad::getHeight() {
     return _height;
 }
 
-void DisplayCore::setPixel(int x, int y, int z, color_t c) {
+void Cariad::setPixel(int x, int y, int z, color_t c) {
     point3d p3d = {(double)x, (double)y, (double)z};
     point2d p2d = map3Dto2D(p3d);
     setPixel(p2d.x, p2d.y, c);

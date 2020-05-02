@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 #include "swap.h"
@@ -11,7 +11,7 @@
  *
  *      tft.drawTriangle(40, 10, 60, 30, 20, 30, Color::Cyan);
  */
-void DisplayCore::drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color) {
+void Cariad::drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color) {
     startBuffer();
     drawLine(x0, y0, x1, y1, color);
     drawLine(x1, y1, x2, y2, color);
@@ -27,7 +27,7 @@ void DisplayCore::drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, c
  *
  *      tft.fillTriangle(40, 10, 60, 30, 20, 30, Color::Cyan);
  */
-void DisplayCore::fillTriangle ( int x0, int y0, int x1, int y1, int x2, int y2, color_t color) {
+void Cariad::fillTriangle ( int x0, int y0, int x1, int y1, int x2, int y2, color_t color) {
     int a, b, y, last;
 
     startBuffer();

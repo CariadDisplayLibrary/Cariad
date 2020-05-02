@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 #include "static3d.h"
@@ -21,7 +21,7 @@ point3d Scene::translatePoint(point3d p) {
     
     return d;
 }
-int Scene::render(DisplayCore *dev) {
+int Scene::render(Cariad *dev) {
     // Storage for the translated triangles
     triangle conv[_numtriangles];
     // First tweak the colours in the static scene
@@ -178,7 +178,7 @@ static int findTrianglesAround(point3d &p, triangle *tris, int num) {
     return nf;
 }
         
-void Scene::trace(DisplayCore *dev, float depth, bool smooth) {
+void Scene::trace(Cariad *dev, float depth, bool smooth) {
     // Storage for the translated triangles
     triangle conv[_numtriangles];
     color_t acolor[_numtriangles];

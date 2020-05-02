@@ -1,10 +1,10 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 
-void DisplayCore::startBuffer() {
+void Cariad::startBuffer() {
     // Not actually doing anything here.
     // Implement it in the display driver.
 }
 
-void DisplayCore::endBuffer() {
+void Cariad::endBuffer() {
     // Still not doing anything.
 }

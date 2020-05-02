@@ -1,7 +1,7 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
-void DisplayCore::drawLine3D(int x1, int y1, int z1, const int x2, const int y2, const int z2, color_t color) {
+void Cariad::drawLine3D(int x1, int y1, int z1, const int x2, const int y2, const int z2, color_t color) {
     int i, dx, dy, dz, l, m, n, x_inc, y_inc, z_inc, err_1, err_2, dx2, dy2, dz2;
     int point[3];
     

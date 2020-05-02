@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 /*!
@@ -10,7 +10,7 @@
  *
  *      setClipping(100, 100, 200, 200);
  */
-void DisplayCore::setClipping(int x0, int y0, int x1, int y1) {
+void Cariad::setClipping(int x0, int y0, int x1, int y1) {
     _clip_x0 = x0;
     _clip_x1 = x1;
     _clip_y0 = y0;
@@ -24,14 +24,14 @@ void DisplayCore::setClipping(int x0, int y0, int x1, int y1) {
  * 
  *      clearClipping();
  */
-void DisplayCore::clearClipping() {
+void Cariad::clearClipping() {
     _clip_x0 = 0;
     _clip_y0 = 0;
     _clip_x1 = getWidth() - 1;
     _clip_y1 = getHeight() - 1;
 }
 
-bool DisplayCore::clipToScreen(int &x, int &y, int &w, int &h) {
+bool Cariad::clipToScreen(int &x, int &y, int &w, int &h) {
     if (x < 0) {
         w += x;
         x = 0;

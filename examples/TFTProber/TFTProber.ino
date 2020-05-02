@@ -47,7 +47,7 @@
  *  it will provide a complete register dump. This may be used to extend the
  *  list of screens the program recognises. Send that dump, along with details
  *  of the screen you have, to Majenko Technologies (through a Github issue at
- *  https://github.com/MajenkoLibraries/DisplayCore/issues) to see if support
+ *  https://github.com/MajenkoLibraries/Cariad/issues) to see if support
  *  for your screen can be added.
  */
 

@@ -114,7 +114,7 @@ typedef struct {
 extern color_t rgb(uint32_t c);
 extern color_t rgb(uint8_t r, uint8_t g, uint8_t b);
 
-class DisplayCore;
+class Cariad;
 
 // The new font abstration base class. Implements the normal font system as default.
 class Font {
@@ -128,14 +128,14 @@ class Font {
         virtual uint8_t getCharacterWidth(uint8_t glyph);
         virtual uint8_t getStartGlyph();
         virtual uint8_t getEndGlyph();
-        virtual int drawChar(DisplayCore *dev, int x, int y, uint8_t c, color_t fg, color_t bg);
+        virtual int drawChar(Cariad *dev, int x, int y, uint8_t c, color_t fg, color_t bg);
 };
 
 
-class DisplayCore : public Print
+class Cariad : public Print
 {
     public:
-        DisplayCore();
+        Cariad();
 
         /*! \name Primitives
          * @{
@@ -473,7 +473,7 @@ class Filter {
         void endChain() { _next = NULL; }
 };
 
-class Image : public DisplayCore {
+class Image : public Cariad {
     protected:
         Filter *_filter;
     public:
@@ -487,18 +487,18 @@ class Image : public DisplayCore {
         virtual int getHeight() { return _height; }
 
 
-        virtual void draw(DisplayCore *dev, int x, int y) = 0;
-        virtual void draw(DisplayCore *dev, int x, int y, color_t t) = 0;
-        virtual void drawTransformed(DisplayCore *dev, int x, int y, int transform) = 0;
-        virtual void drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t) = 0;
+        virtual void draw(Cariad *dev, int x, int y) = 0;
+        virtual void draw(Cariad *dev, int x, int y, color_t t) = 0;
+        virtual void drawTransformed(Cariad *dev, int x, int y, int transform) = 0;
+        virtual void drawTransformed(Cariad *dev, int x, int y, int transform, color_t t) = 0;
 
-        void draw(DisplayCore &dev, int x, int y) { draw(&dev, x, y); }
-        void draw(DisplayCore &dev, int x, int y, color_t t) { draw(&dev, x, y, t); }
-        void drawTransformed(DisplayCore &dev, int x, int y, int transform) { drawTransformed(&dev, x, y, transform); }
-        void drawTransformed(DisplayCore &dev, int x, int y, int __attribute__((unused)) transform, color_t t) { drawTransformed(&dev, x, y, t); }
+        void draw(Cariad &dev, int x, int y) { draw(&dev, x, y); }
+        void draw(Cariad &dev, int x, int y, color_t t) { draw(&dev, x, y, t); }
+        void drawTransformed(Cariad &dev, int x, int y, int transform) { drawTransformed(&dev, x, y, transform); }
+        void drawTransformed(Cariad &dev, int x, int y, int __attribute__((unused)) transform, color_t t) { drawTransformed(&dev, x, y, t); }
 
-        void draw(DisplayCore *dev) { draw(dev, 0, 0); }
-        void draw(DisplayCore &dev) { draw(&dev, 0, 0); }
+        void draw(Cariad *dev) { draw(dev, 0, 0); }
+        void draw(Cariad &dev) { draw(&dev, 0, 0); }
 
 
         void setFilter(Filter &f) { _filter = &f; };
@@ -541,7 +541,7 @@ enum {
 class Widget : public Image {
     protected:
         Touch *_ts;
-        DisplayCore *_dev;
+        Cariad *_dev;
         int _x;
         int _y;
         int _value;
@@ -582,7 +582,7 @@ class Widget : public Image {
         virtual void handleRepeat(Event *e);
 
     public:
-        Widget(Touch &t, DisplayCore &d, int x, int y) : Image(),
+        Widget(Touch &t, Cariad &d, int x, int y) : Image(),
             _ts(&t), _dev(&d), _x(x), _y(y), _redraw(true), _touch(false), _enabled(true),
             _press(NULL), _release(NULL), _drag(NULL), _tap(NULL), _repeat(NULL), _eventObject(NULL)
             {}
@@ -608,16 +608,16 @@ class Widget : public Image {
 
         void handleTouch();
 
-        virtual void draw(DisplayCore *dev, int x, int y) = 0;
+        virtual void draw(Cariad *dev, int x, int y) = 0;
 
-        void draw(DisplayCore *dev, int x, int y, color_t t);
-        void drawTransformed(DisplayCore *dev, int x, int y, int transform);
-        void drawTransformed(DisplayCore *dev, int x, int y, int transform, color_t t);
+        void draw(Cariad *dev, int x, int y, color_t t);
+        void drawTransformed(Cariad *dev, int x, int y, int transform);
+        void drawTransformed(Cariad *dev, int x, int y, int transform, color_t t);
 
-        void draw(DisplayCore &dev, int x, int y);
-        void draw(DisplayCore &dev, int x, int y, color_t t);
-        void drawTransformed(DisplayCore &dev, int x, int y, int transform);
-        void drawTransformed(DisplayCore &dev, int x, int y, int transform, color_t t);
+        void draw(Cariad &dev, int x, int y);
+        void draw(Cariad &dev, int x, int y, color_t t);
+        void drawTransformed(Cariad &dev, int x, int y, int transform);
+        void drawTransformed(Cariad &dev, int x, int y, int transform, color_t t);
 
         virtual void redraw();
 
@@ -687,10 +687,10 @@ class Scene {
         void setLightPosition(int x, int y, int z) { _light.x = x; _light.y = y; _light.z = z; }
         void setAmbientLight(double l) { _ambient = l; }
 
-        int render(DisplayCore *dev);
-        int render(DisplayCore &dev) { return render(&dev); }
+        int render(Cariad *dev);
+        int render(Cariad &dev) { return render(&dev); }
         void setWireFrame(bool b);
-        void trace(DisplayCore *dev, float depth, bool smooth = false);
+        void trace(Cariad *dev, float depth, bool smooth = false);
 };
 
 

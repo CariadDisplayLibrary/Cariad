@@ -1,7 +1,7 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
-DisplayCore::DisplayCore() {
+Cariad::Cariad() {
     cursor_y = cursor_x = 0;
     textcolor = 0xFFFF;
     textbgcolor = 0;
@@ -9,6 +9,6 @@ DisplayCore::DisplayCore() {
     font = Fonts::Default;
 }
 
-void DisplayCore::setPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
+void Cariad::setPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
     setPixel(x, y, rgb(r, g, b));
 }

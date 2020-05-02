@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 /*!
@@ -9,7 +9,7 @@
  * 
  *      tft.drawBezier(0, 100, 100, 50, 200, 150, 300, 100, Color::Red);
  */
-void DisplayCore::drawBezier(
+void Cariad::drawBezier(
     int x0, int y0,
     int x1, int y1,
     int x2, int y2,
@@ -52,7 +52,7 @@ void DisplayCore::drawBezier(
  * 
  *      tft.fillBezier(0, 100, 100, 50, 200, 150, 300, 100, Color::Red);
  */
-void DisplayCore::fillBezier(
+void Cariad::fillBezier(
     int x0, int y0,
     int x1, int y1,
     int x2, int y2,

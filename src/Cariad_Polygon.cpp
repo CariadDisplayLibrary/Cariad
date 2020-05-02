@@ -1,7 +1,7 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
-void DisplayCore::drawPolygon(point2d *nodes, int numpoints, color_t color) {
+void Cariad::drawPolygon(point2d *nodes, int numpoints, color_t color) {
     for (int i = 1; i < numpoints; i++) {
         drawLine(nodes[i-1].x, nodes[i-1].y, nodes[i].x, nodes[i].y, color);
     }
@@ -9,7 +9,7 @@ void DisplayCore::drawPolygon(point2d *nodes, int numpoints, color_t color) {
 }
 
 
-void DisplayCore::fillPolygon(point2d *nodes, int numpoints, color_t color) {
+void Cariad::fillPolygon(point2d *nodes, int numpoints, color_t color) {
     int i;
     int nodeX[20];
     int nodeCount;

@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 /*!
@@ -8,7 +8,7 @@
  *
  *      tft.drawCircle(50, 50, 20, Color::Red);
  */
-void DisplayCore::drawCircle(int x0, int y0, int r, color_t color) {
+void Cariad::drawCircle(int x0, int y0, int r, color_t color) {
     startBuffer();
     int f = 1 - r;
     int ddF_x = 1;
@@ -52,7 +52,7 @@ void DisplayCore::drawCircle(int x0, int y0, int r, color_t color) {
  *
  *      tft.fillCircle(50, 50, 20, Color::Red);
  */
-void DisplayCore::fillCircle(int x0, int y0, int radius, color_t color) {
+void Cariad::fillCircle(int x0, int y0, int radius, color_t color) {
     startBuffer();
     int32_t r2 = radius * radius;
     for (int y1 = 0-radius; y1 <= 0; y1++) {
@@ -68,7 +68,7 @@ void DisplayCore::fillCircle(int x0, int y0, int radius, color_t color) {
     endBuffer();
 }
 
-void DisplayCore::drawCircleHelper( int x0, int y0, int r, int cornername, color_t color) {
+void Cariad::drawCircleHelper( int x0, int y0, int r, int cornername, color_t color) {
     startBuffer();
     int f     = 1 - r;
     int ddF_x = 1;
@@ -106,7 +106,7 @@ void DisplayCore::drawCircleHelper( int x0, int y0, int r, int cornername, color
 }
 
 /*! This is a helper function.  It is used to draw segments of a filled circle. */
-void DisplayCore::fillCircleHelper(int x0, int y0, int r, int cornername, int delta, color_t color) {
+void Cariad::fillCircleHelper(int x0, int y0, int r, int cornername, int delta, color_t color) {
     startBuffer();
     int f     = 1 - r;
     int ddF_x = 1;

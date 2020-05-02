@@ -1,4 +1,4 @@
-#include <DisplayCore.h>
+#include <Cariad.h>
 #include <stdarg.h>
 
 /*!
@@ -10,7 +10,7 @@
  * 
  *      tft.drawRectangle(10, 10, 200, 300, Color::Blue);
  */
-void DisplayCore::drawRectangle(int x, int y, int w, int h, color_t color) {
+void Cariad::drawRectangle(int x, int y, int w, int h, color_t color) {
     startBuffer();
     drawHorizontalLine(x, y, w, color);
     drawHorizontalLine(x, y+h-1, w, color);
@@ -31,7 +31,7 @@ void DisplayCore::drawRectangle(int x, int y, int w, int h, color_t color) {
  *  It is expected that actual screen drivers will override this function with a high speed
  *  optimized function.
  */
-void DisplayCore::fillRectangle(int x, int y, int w, int h, color_t color) {
+void Cariad::fillRectangle(int x, int y, int w, int h, color_t color) {
     startBuffer();
     for (int i = 0; i < h; i++) {
         for (int j = 0; j < w; j++) {
@@ -48,7 +48,7 @@ void DisplayCore::fillRectangle(int x, int y, int w, int h, color_t color) {
  *
  *      tft.fillScreen(Color::Black);
  */
-void DisplayCore::fillScreen(color_t color) {
+void Cariad::fillScreen(color_t color) {
     startBuffer();
     bgColor = color;
     fillRectangle(0, 0, getWidth(), getHeight(), color);
@@ -64,7 +64,7 @@ void DisplayCore::fillScreen(color_t color) {
  *
  *      tft.drawRoundRect(10, 10, 100, 50, 4, Color::Yellow);
  */
-void DisplayCore::drawRoundRect(int x, int y, int w, int h, int r, color_t color) {
+void Cariad::drawRoundRect(int x, int y, int w, int h, int r, color_t color) {
     startBuffer();
     // smarter version
     drawHorizontalLine(x+r  , y    , w-2*r, color); // Top
@@ -88,7 +88,7 @@ void DisplayCore::drawRoundRect(int x, int y, int w, int h, int r, color_t color
  *
  *      tft.fillRoundRect(10, 10, 100, 50, 4, Color::Yellow);
  */
-void DisplayCore::fillRoundRect(int x, int y, int w, int h, int r, color_t color) {
+void Cariad::fillRoundRect(int x, int y, int w, int h, int r, color_t color) {
     startBuffer();
     // smarter version
     fillRectangle(x+r, y, w-2*r, h, color);
