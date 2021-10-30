@@ -292,6 +292,13 @@ class Cariad : public Print
         virtual int getWidth();
         virtual int getHeight();
 
+        virtual void setBrightness(int b);
+        virtual int getBrightness();
+        virtual void setContrast(int c);
+        virtual int getContrast();
+
+        virtual bool sync();
+
         /*! @} */
 
 
